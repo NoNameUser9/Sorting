@@ -23,10 +23,10 @@ class address  // NOLINT(cppcoreguidelines-special-member-functions)
 public:
  address();
  // ReSharper disable once CppInconsistentNaming
- address(wr_mode WR_mode);
+ explicit address(wr_mode WR_mode);
  
  // ReSharper disable CppInconsistentNaming
- void set_address(const string& path, mode _Mode, byte WR_mode);  // NOLINT(bugprone-reserved-identifier)
+ void set_address(const string& path, mode _Mode, wr_mode WR_mode);  // NOLINT(bugprone-reserved-identifier)
  // ReSharper restore CppInconsistentNaming
 
  [[nodiscard]] string get_address() const;
@@ -35,11 +35,11 @@ public:
 
  address& operator=(const address& right);
     
- static constexpr mode relative = static_cast<byte>(0);
- static constexpr mode absolute = static_cast<byte>(1);
- static constexpr wr_mode write = static_cast<byte>(0);
- static constexpr wr_mode read = static_cast<byte>(1);
- static constexpr wr_mode custom = static_cast<byte>(2);
+ static constexpr mode relative = static_cast<mode>(0);
+ static constexpr mode absolute = static_cast<mode>(1);
+ static constexpr wr_mode write = static_cast<wr_mode>(0);
+ static constexpr wr_mode read = static_cast<wr_mode>(1);
+ static constexpr wr_mode custom = static_cast<wr_mode>(2);
 private:
  const string write_ = "data_out.csv";
  const string read_ = "data.csv";
