@@ -5,9 +5,11 @@
 
 void read(int* a, const string& path)
 {
-    string line;
     fstream fin(path);
     stringstream ss;
+    string line;
+
+    fin.open(path, fstream::in);
     
     for(int i = 0; getline(fin, line); ++i)
     {
@@ -23,7 +25,6 @@ void write(const int* a, const string& path, const int num)
 {
     // ReSharper disable once IdentifierTypo
     fstream fout;
-    stringstream ss;
     
     fout.open(path, fstream::trunc|fstream::out);
     
@@ -32,7 +33,6 @@ void write(const int* a, const string& path, const int num)
     
     for(int i = 0; i < num; ++i)
     {
-        ss.clear();
         string str = to_string(a[i])+'\n';
         fout.write(str.c_str(), static_cast<streamsize>(str.size()));
     }
@@ -40,7 +40,7 @@ void write(const int* a, const string& path, const int num)
     fout.close();
 }
 
-void print(auto* arr, const int num)
+void print(const int* arr, const int num)
 {
     for(int i = 0; i < num; i++)
         cout << arr[i] << " ";

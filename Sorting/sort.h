@@ -8,7 +8,7 @@ void swap(int& a, int& b) noexcept;
  * \param num number of array elements
  */
 void bubble_sort(int* a, int num);
-/*
+/**
  * \brief selects the smallest element and swap it with a[i]
  * \param a a[num] array
  * \param num number of array elements

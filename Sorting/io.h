@@ -15,4 +15,4 @@ void read(int* a, const string& path);
  * \param num size of array
  */
 void write(const int* a, const string& path, int num);
-void print(auto* arr, int num);
+void print(const int* arr, int num);

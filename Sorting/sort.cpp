@@ -2,7 +2,7 @@
 
 void swap(int& a, int& b) noexcept
 {
-    const auto temp = b;
+    const int temp = b;
     b = a;
     a = temp;
 }
