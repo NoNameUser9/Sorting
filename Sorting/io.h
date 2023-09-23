@@ -23,7 +23,7 @@ class address  // NOLINT(cppcoreguidelines-special-member-functions)
 public:
  address();
  // ReSharper disable once CppInconsistentNaming
- address(wr_mode WR_mode);
+ explicit address(wr_mode WR_mode);
  
  // ReSharper disable CppInconsistentNaming
  void set_address(const string& path, mode _Mode, byte WR_mode);  // NOLINT(bugprone-reserved-identifier)
