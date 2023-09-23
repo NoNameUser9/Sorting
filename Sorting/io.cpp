@@ -40,10 +40,10 @@ void write(const int* a, const string& path, const int num)
     fout.close();
 }
 
-void print(const int* arr, const int num)
+void print(const int* a, const int num)
 {
     for(int i = 0; i < num; i++)
-        cout << arr[i] << " ";
+        cout << a[i] << " ";
     
     cout << endl;
 }
