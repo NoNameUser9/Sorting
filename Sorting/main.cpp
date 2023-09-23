@@ -19,17 +19,17 @@ auto *ptr7 = heap_sort;
 
 int main(int argc, char* argv[])
 {
-const string paths = "C:\\Users\\User\\Documents\\data.csv";
+    const string paths = "C:\\Users\\User\\Documents";
     // ReSharper disable once CppDeclaratorNeverUsed
     constexpr int num = 5000;
     // ReSharper disable once CppTooWideScope
     int n = 100;
     int a[num] = {};
+    // int str_num = 25898;
 
-    address path, path_out(address::write);
+    address path(paths), path_out(paths, address::write);
     mode mode1 = address::relative;
     string str_m = "relative";
-    
     while (true)
     {
         system("cls");
@@ -97,7 +97,8 @@ const string paths = "C:\\Users\\User\\Documents\\data.csv";
                 string s_path;
                 cout << "enter the address to files:";
                 cin >> s_path;
-                path.set_address(s_path, mode1, address::write);
+                path.set_address(s_path, mode1, address::read);
+                path_out.set_address(s_path, mode1, address::write);
                 break;
             }
         case 5:

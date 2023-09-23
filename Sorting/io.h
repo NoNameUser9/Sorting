@@ -24,6 +24,8 @@ public:
  address();
  // ReSharper disable once CppInconsistentNaming
  explicit address(wr_mode WR_mode);
+ address(const string& path, wr_mode WR_mode);
+ explicit address(const string& path);
  
  // ReSharper disable CppInconsistentNaming
  void set_address(const string& path, mode _Mode, wr_mode WR_mode);  // NOLINT(bugprone-reserved-identifier)

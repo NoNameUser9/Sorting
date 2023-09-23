@@ -171,3 +171,14 @@ void heap_sort(int* a, const int num)
         heapify(a, i, 0);
     }
 }
+
+void literal_sort(std::string* a, const int num)
+{
+    // ReSharper disable once CppCStyleCast
+    shell_sort((int*)a->at(0), num);  // NOLINT(clang-diagnostic-cast-qual, clang-diagnostic-cast-align)
+    // for(int i = 0; i < num; ++i)
+    // {
+    //     
+    // }
+    
+}

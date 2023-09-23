@@ -85,6 +85,34 @@ address::address(const wr_mode WR_mode = write|read)
     }
 }
 
+// ReSharper disable once CppPossiblyUninitializedMember
+// ReSharper disable once CppInconsistentNaming
+address::address(const string& path, const wr_mode WR_mode = write|read)  // NOLINT(cppcoreguidelines-pro-type-member-init)
+{
+    if(WR_mode == write)
+    {
+        wr_mode_ = write;
+        wr_ = write_;
+        path_ = path + "\\" + wr_;
+    }
+    else if(WR_mode == read)
+    {
+        wr_mode_ = read;
+        wr_ = read_;
+        path_ = path + "\\" + wr_;
+    }
+    mode_ = absolute;
+}
+
+// ReSharper disable once CppPossiblyUninitializedMember
+address::address(const string& path)  // NOLINT(cppcoreguidelines-pro-type-member-init)
+{
+    wr_mode_ = read;
+    wr_ = read_;
+    path_ = path + "\\" + wr_;
+    mode_ = absolute;
+}
+
 // ReSharper disable CppInconsistentNaming
 // ReSharper disable once CppCompileTimeConstantCanBeReplacedWithBooleanConstant
 void address::set_address(const string& path,const mode _Mode = relative|absolute, const wr_mode WR_mode = write|read|custom)  // NOLINT(clang-diagnostic-reserved-identifier, bugprone-reserved-identifier)
@@ -108,12 +136,12 @@ void address::set_address(const string& path,const mode _Mode = relative|absolut
     
     if(_Mode == relative)
     {
-        path_ = "~\\" + path + wr_;
+        path_ = "~\\" + path + "\\" + wr_;
         mode_ = relative;
     }
     else if (_Mode == absolute)
     {
-        path_ = path + wr_;  // NOLINT(bugprone-branch-clone)
+        path_ = path + "\\" + wr_;  // NOLINT(bugprone-branch-clone)
         mode_ = absolute;
     }
     else

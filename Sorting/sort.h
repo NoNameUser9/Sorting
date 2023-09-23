@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <string>
 
 void swap(int& a, int& b) noexcept;
 
@@ -44,3 +45,4 @@ void shell_sort(int* a, int num);
  * \param num number of array elements
  */
 void heap_sort(int* a, int num);
+void literal_sort(std::string* a, int num);
