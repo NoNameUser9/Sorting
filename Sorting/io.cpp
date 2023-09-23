@@ -10,6 +10,12 @@ void read(int* a, const string& path)
     string line;
 
     fin.open(path, fstream::in);
+
+    if(!fin.is_open())
+    {
+        cout << "\nthe file isn't opened!\n";
+        return;
+    }
     
     for(int i = 0; getline(fin, line); ++i)
     {
@@ -29,7 +35,10 @@ void write(const int* a, const string& path, const int num)
     fout.open(path, fstream::trunc|fstream::out);
     
     if(!fout.is_open())
-        cout << "file not opened";
+    {
+        cout << "the file isn't opened!\n";
+        return;
+    }
     
     for(int i = 0; i < num; ++i)
     {
@@ -46,4 +55,99 @@ void print(const int* a, const int num)
         cout << a[i] << " ";
     
     cout << endl;
+}
+
+// ReSharper disable once CppPossiblyUninitializedMember
+address::address()  // NOLINT(cppcoreguidelines-pro-type-member-init, modernize-use-equals-default)
+{
+    mode_ = relative;
+    wr_mode_ = read;
+    wr_ = read_;
+    path_ = "~\\" + wr_;
+}
+
+// ReSharper disable once CppInconsistentNaming
+address::address(const wr_mode WR_mode = write|read)
+{
+    mode_ = relative;
+    
+    if(WR_mode == write)
+    {
+        wr_mode_ = write;
+        wr_ = write_;
+        path_ = "~\\" + wr_;
+    }
+    else if(WR_mode == read)
+    {
+        wr_mode_ = read;
+        wr_ = read_;
+        path_ = "~\\" + wr_;
+    }
+}
+
+// ReSharper disable CppInconsistentNaming
+// ReSharper disable once CppCompileTimeConstantCanBeReplacedWithBooleanConstant
+void address::set_address(const string& path,const mode _Mode = relative|absolute, const wr_mode WR_mode = write|read|custom)  // NOLINT(clang-diagnostic-reserved-identifier, bugprone-reserved-identifier)
+// ReSharper restore CppInconsistentNaming
+{
+    if(WR_mode == write)
+    {
+        wr_mode_ = write;
+        wr_ = write_;
+    }
+    else if(WR_mode == read)
+    {
+        wr_mode_ = read;
+        wr_ = read_;
+    }
+    else if(WR_mode == custom)
+    {
+        wr_mode_ = custom;
+        wr_ = custom_;
+    }
+    
+    if(_Mode == relative)
+    {
+        path_ = "~\\" + path + wr_;
+        mode_ = relative;
+    }
+    else if (_Mode == absolute)
+    {
+        path_ = path + wr_;  // NOLINT(bugprone-branch-clone)
+        mode_ = absolute;
+    }
+    else
+        cout << "wrong address::get_address _Mode";
+}
+
+string address::get_address() const
+{
+    return path_;
+}
+
+string address::get_mode() const
+{
+    string str;
+    
+    if(mode_ == relative)
+        str = "relative";
+    if(mode_ == absolute)
+        str = "absolute";
+    
+    return str;
+}
+
+bool address::try_open() const
+{
+    if(const fstream fin(path_); fin.is_open())
+        return true;
+
+    cout << "file isn't opened!\n";
+    return false;
+}
+
+address& address::operator=(const address& right)
+{
+    this->path_ = right.path_;
+    return *this;    
 }

@@ -1,5 +1,6 @@
 ﻿#pragma once
-#include <string>
+#include <chrono>
+#include "io.h"
 using namespace std;  // NOLINT(clang-diagnostic-header-hygiene)
 
 /**
@@ -9,7 +10,7 @@ using namespace std;  // NOLINT(clang-diagnostic-header-hygiene)
  * \param num number of array elements
  * \return time in seconds
  */
-auto time(void (*f)(int*, int), int* a, int num);
+std::chrono::duration<double, std::ratio<1, 1>> time(void (*f)(int*, int), int* a, int num);
 /**
  * \brief this function testing time for function complete in [n] iterations
  * \param f pointer to function
@@ -19,4 +20,5 @@ auto time(void (*f)(int*, int), int* a, int num);
  * \param path path to file with data
  * \return time in seconds
  */
-auto test(void (*f)(int*, int), int* a, int num, int n, const string& path);
+std::chrono::duration<double, std::ratio<1, 1>> test(void (*f)(int*, int), int* a, int num, int n, const address& path);
+void full_test(int* a, const int& num, const int& n, const address& path);
