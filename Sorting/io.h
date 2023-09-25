@@ -1,5 +1,8 @@
 ﻿#pragma once
 #include <string>
+
+#include "struct.h"
+class address;
 using namespace std;  // NOLINT(clang-diagnostic-header-hygiene)
 typedef byte mode;
 typedef byte wr_mode;
@@ -8,15 +11,17 @@ typedef byte wr_mode;
  * \brief read data from file
  * \param a a[] array
  * \param path path to file with data
+ * \param type type of data
  */
-void read(int* a, const string& path);
+void read(const my_struct& a, const address& path, std::underlying_type_t<std::byte> type);
 /**
- * \brief write data to file
+ * \brief write data to file (without _Str)
  * \param a a[] array
  * \param path path to file with data
  * \param num size of array
+ * \param type type of data
  */
-void write(const int* a, const string& path, int num);
+void write(const my_struct& a, const address& path, int num, std::underlying_type_t<std::byte> type);
 void print(const int* a, int num);
 class address  // NOLINT(cppcoreguidelines-special-member-functions)
 {

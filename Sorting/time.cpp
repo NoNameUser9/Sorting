@@ -4,48 +4,45 @@
 
 using namespace std;
 
-std::chrono::duration<double, std::ratio<1, 1>> time(void (*f)(int*, int), int* a, const int num)
+chrono::duration<double, ratio<1, 1>> time(void (*f)(int*, int), const my_struct& a, const int num, const std::underlying_type_t<std::byte> type = _Int|_Str)
 {
     const auto start = chrono::system_clock::now();
-    f(a, num);
+    if(type == _Int)
+        f(a.Int, num);
+    // else if(type == _Str)
+        // f(a.str, num);
+        
     const auto end = chrono::system_clock::now();
     
-    return std::chrono::duration<double, std::ratio<1, 1>>(end - start);  // NOLINT(modernize-return-braced-init-list)
+    return chrono::duration<double, ratio<1, 1>>(end - start);  // NOLINT(modernize-return-braced-init-list)
 }
 
-std::chrono::duration<double, std::ratio<1, 1>> test(void (*f)(int*, int), int* a, const int num, const int n, const address& path)
+chrono::duration<double, ratio<1, 1>> test(void (*f)(int*, int), const my_struct& a, const int num, const int n, const address& path, const std::underlying_type_t<std::byte> type = _Int|_Str)
 {
     if(!path.try_open())
-        return std::chrono::duration<double, std::ratio<1, 1>>(0);
+        return chrono::duration<double, ratio<1, 1>>(0);
 
     chrono::duration<double> t{};
     
     for(int i = 0; i < n; ++i)
     {
-        read(a, path.get_address());
-        t += time(f, a, num);
+        read(a, path, type);
+        t += time(f, a, num, type);
     }
     
     return t /= n;
 }
 
-void full_test(int* a, const int& num, const int& n, const address& path)
+void full_test(const my_struct& a, const int& num, const int& n, const address& path, const std::underlying_type_t<std::byte> type = _Int|_Str)
 {
     if(!path.try_open())
         return;
-    
-    auto *ptr = bubble_sort;
-    auto *ptr2 = selection_sort;
-    auto *ptr3 = insertion_sort;
-    auto *ptr4 = q_sort;
-    // auto *ptr5 = merge_sort;
-    auto *ptr6 = shell_sort;
-    auto *ptr7 = heap_sort;
 
-    cout << "bubble_sort:\n" << test(ptr, a, num, n, path) << endl << endl;
-    cout << "selection_sort:\n" << test(ptr2, a, num, n, path) << endl << endl;
-    cout << "insertion_sort:\n" << test(ptr3, a, num, n, path) << endl << endl;
-    cout << "q_sort:\n" << test(ptr4, a, num, n, path) << endl << endl;
-    cout << "shell_sort:\n" << test(ptr6, a, num, n, path) << endl << endl;
-    cout << "heap_sort:\n" << test(ptr7, a, num, n, path) << endl << endl;
+    cout << "bubble_sort:\n" << test(bubble_sort, a, num, n, path, type) << endl << endl;
+    cout << "selection_sort:\n" << test(selection_sort, a, num, n, path, type) << endl << endl;
+    cout << "insertion_sort:\n" << test(insertion_sort, a, num, n, path, type) << endl << endl;
+    cout << "q_sort:\n" << test(q_sort, a, num, n, path, type) << endl << endl;
+    // cout << "merge_sort:\n" << test(merge_sort, a, num, n, path, type) << endl << endl;
+    cout << "shell_sort:\n" << test(shell_sort, a, num, n, path, type) << endl << endl;
+    cout << "heap_sort:\n" << test(heap_sort, a, num, n, path, type) << endl << endl;
 }

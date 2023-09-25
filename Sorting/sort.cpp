@@ -130,7 +130,7 @@ void shell_sort(int* a, const int num)
         }
         
         if(range <= 1)
-            break;
+        break;
         
         range /= factor;
     }
@@ -172,10 +172,11 @@ void heap_sort(int* a, const int num)
     }
 }
 
-void literal_sort(std::string* a, const int num)
+void literal_sort(const std::string* a, const int num)
 {
     // ReSharper disable once CppCStyleCast
-    shell_sort((int*)a->at(0), num);  // NOLINT(clang-diagnostic-cast-qual, clang-diagnostic-cast-align)
+    // ReSharper disable once CommentTypo
+    shell_sort((int*)a->at(0), num);  // NOLINT(clang-diagnostic-cast-qual, clang-diagnostic-cast-align, performance-no-int-to-ptr, clang-diagnostic-int-to-pointer-cast)
     // for(int i = 0; i < num; ++i)
     // {
     //     

@@ -2,37 +2,51 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include "struct.h"
 
-void read(int* a, const string& path)
+// ReSharper disable once CppCompileTimeConstantCanBeReplacedWithBooleanConstant
+void read(const my_struct& a, const address& path, const std::underlying_type_t<std::byte> type = _Str|_Int)
 {
-    fstream fin(path);
+    fstream fin;
     stringstream ss;
     string line;
 
-    fin.open(path, fstream::in);
+    fin.open(path.get_address(), fstream::in);
 
     if(!fin.is_open())
     {
         cout << "\nthe file isn't opened!\n";
         return;
     }
-    
-    for(int i = 0; getline(fin, line); ++i)
+
+    if(type == _Int)
     {
-        ss.clear();
-        ss << line;
-        ss >> a[i];
+        for(int i = 0; getline(fin, line); ++i)
+        {
+            ss.clear();
+            ss << line;
+            ss >> a.Int[i];
+        }
+    }
+    else if(type == _Str)
+    {
+        for(int i = 0; getline(fin, line); ++i)
+        {
+            ss.clear();
+            ss << line;
+            ss >> a.str[i];
+        }
     }
     
     fin.close();
 }
 
-void write(const int* a, const string& path, const int num)
+void write(const my_struct& a, const address& path, const int num, const std::underlying_type_t<std::byte> type = _Str|_Int)
 {
     // ReSharper disable once IdentifierTypo
     fstream fout;
     
-    fout.open(path, fstream::trunc|fstream::out);
+    fout.open(path.get_address(), fstream::trunc|fstream::out);
     
     if(!fout.is_open())
     {
@@ -40,10 +54,21 @@ void write(const int* a, const string& path, const int num)
         return;
     }
     
-    for(int i = 0; i < num; ++i)
+    if(type == _Int)
     {
-        string str = to_string(a[i])+'\n';
-        fout.write(str.c_str(), static_cast<streamsize>(str.size()));
+        for(int i = 0; i < num; ++i)
+        {
+            string str = to_string(a.Int[i]) + '\n';
+            fout.write(str.c_str(), static_cast<streamsize>(str.size()));
+        }
+    }
+    else if(type == _Str)
+    {
+        for(int i = 0; i < num; ++i)
+        {
+            string str = a.str[i] + '\n';
+            fout.write(str.c_str(), static_cast<streamsize>(str.size()));
+        }
     }
 
     fout.close();

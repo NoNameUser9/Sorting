@@ -45,4 +45,4 @@ void shell_sort(int* a, int num);
  * \param num number of array elements
  */
 void heap_sort(int* a, int num);
-void literal_sort(std::string* a, int num);
+void literal_sort(const std::string* a, int num);

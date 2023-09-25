@@ -6,30 +6,29 @@
 #include "io.h"
 #include "time.h"  // NOLINT(modernize-deprecated-headers)
 #include "sort.h"
+#include "struct.h"
 #define VERSION "v1.1.0"
 using namespace std;
-
-auto *ptr = bubble_sort;
-auto *ptr2 = selection_sort;
-auto *ptr3 = insertion_sort;
-auto *ptr4 = q_sort;
-// auto *ptr5 = merge_sort;
-auto *ptr6 = shell_sort;
-auto *ptr7 = heap_sort;
 
 int main(int argc, char* argv[])
 {
     const string paths = "C:\\Users\\User\\Documents";
-    // ReSharper disable once CppDeclaratorNeverUsed
     constexpr int num = 5000;
-    // ReSharper disable once CppTooWideScope
     int n = 100;
+
+    my_struct ms{};
+    
     int a[num] = {};
+    string* a_s{};
+    
+    ms.Int = a;
+    ms.str = a_s;
     // int str_num = 25898;
 
     address path(paths), path_out(paths, address::write);
     mode mode1 = address::relative;
-    string str_m = "relative";
+    string str_m;
+    
     while (true)
     {
         system("cls");
@@ -112,7 +111,7 @@ int main(int argc, char* argv[])
             {
                 system("cls");
                 cout << "full test of sorting\n\n";
-                full_test(a, num, n, path);
+                full_test(ms, num, n, path, _Int);
                 system("pause");
                 break;
             }
@@ -133,44 +132,45 @@ int main(int argc, char* argv[])
                 case 1:
                     {
                         system("cls");
-                        cout << "bubble_sort:\n" << test(ptr, a, num, n, path) << "\n\n";
+                        cout << "bubble_sort:\n" << test(bubble_sort, ms, num, n, path, _Int) << "\n\n";
                         break;
                     }
                 case 2:
                     {
                         system("cls");
-                        cout << "selection_sort:\n" << test(ptr2, a, num, n, path) << "\n\n";
+                        cout << "selection_sort:\n" << test(selection_sort, ms, num, n, path, _Int) << "\n\n";
                         break;
                     }
                 case 3:
                     {
                         system("cls");
-                        cout << "insertion_sort:\n" << test(ptr3, a, num, n, path) << "\n\n";
+                        cout << "insertion_sort:\n" << test(insertion_sort, ms, num, n, path, _Int) << "\n\n";
                         break;
                     }
                 case 4:
                     {
                         system("cls");
-                        cout << "q_sort:\n" << test(ptr4, a, num, n, path) << "\n\n";
+                        cout << "q_sort:\n" << test(q_sort, ms, num, n, path, _Int) << "\n\n";
                         break;
                     }
                 case 5:
                     {
                         system("cls");
                         cout << "it's not work yet\n";
+                        cout << "shell_sort:\n" << test(merge_sort, ms, num, n, path, _Int) << "\n\n";
                         system("pause");
                         break;
                     }
                 case 6:
                     {
                         system("cls");
-                        cout << "shell_sort:\n" << test(ptr6, a, num, n, path) << "\n\n";
+                        cout << "shell_sort:\n" << test(shell_sort, ms, num, n, path, _Int) << "\n\n";
                         break;
                     }
                 case 7:
                     {
                         system("cls");
-                        cout << "heap_sort:\n" << test(ptr7, a, num, n, path) << "\n\n";
+                        cout << "heap_sort:\n" << test(heap_sort, ms, num, n, path, _Int) << "\n\n";
                         break;
                     }
                 default:
@@ -185,6 +185,7 @@ int main(int argc, char* argv[])
             }
         case 8:
             {
+                write(ms, path_out, num, _Int);
                 goto end;  // NOLINT(cppcoreguidelines-avoid-goto, hicpp-avoid-goto)
             }
         default:
@@ -195,7 +196,7 @@ int main(int argc, char* argv[])
             }
         }
     }
-
+    
     end:
     return 0;
 }
