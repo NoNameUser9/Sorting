@@ -10,7 +10,7 @@ struct dualtype
     // ReSharper disable CppInconsistentNaming
     int* Int{};
     std::string* Str{};
-    bool is_Int = false;
-    bool is_Str = false;
+    mutable bool is_Str = false;
+    mutable bool is_Str_read = false;
     // ReSharper restore CppInconsistentNaming
 };

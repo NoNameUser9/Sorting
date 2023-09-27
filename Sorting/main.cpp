@@ -2,7 +2,7 @@
 // ReSharper disable CppClangTidyModernizeRawStringLiteral
 // ReSharper disable StringLiteralTypo
 // ReSharper disable CppClangTidyConcurrencyMtUnsafe
-#define VERSION "v1.2.2"
+#define VERSION "v1.2.3"
 #include <iostream>
 #include "io.h"
 #include "time.h"  // NOLINT(modernize-deprecated-headers)
@@ -20,15 +20,13 @@ int main(int argc, char* argv[])
     // address names_adr_out(paths_name_out,address::absolute, address::custom);
     
     constexpr int num = 5000;
-    int n = 100; //число итераций time  // NOLINT(clang-diagnostic-invalid-utf8)
+    int n = 1; //число итераций time  // NOLINT(clang-diagnostic-invalid-utf8)
     
     int a[num]{};
     string a_s[num]{};
     dualtype ms{};
     ms.Int = a;
     ms.Str = a_s;
-    ms.is_Int = true;
-    ms.is_Str = true;
     
     address path(paths), path_out(paths, address::write);
     path.set_address_str(path.get_address());
@@ -119,7 +117,8 @@ int main(int argc, char* argv[])
             {
                 system("cls");
                 cout << "full test of sorting\n\n";
-                full_test(ms, num, n, path);
+                full_test(ms, num, n, path, true);
+                ms.is_Str_read = true;
                 write(ms, path_out, num);
                 // write(ms_str, names_adr_out, num);
                 system("pause");
@@ -145,28 +144,28 @@ int main(int argc, char* argv[])
                 case 1:
                     {
                         system("cls");
-                        cout << "bubble_sort:\n" << test(bubble_sort, ms, num, n, path) << "\n\n";
+                        cout << "bubble_sort:\n" << test(bubble_sort, ms, num, n, path, false) << "\n\n";
                         write(ms, path_out, num);
                         break;
                     }
                 case 2:
                     {
                         system("cls");
-                        cout << "selection_sort:\n" << test(selection_sort, ms, num, n, path) << "\n\n";
+                        cout << "selection_sort:\n" << test(selection_sort, ms, num, n, path, false) << "\n\n";
                         write(ms, path_out, num);
                         break;
                     }
                 case 3:
                     {
                         system("cls");
-                        cout << "insertion_sort:\n" << test(insertion_sort, ms, num, n, path) << "\n\n";
+                        cout << "insertion_sort:\n" << test(insertion_sort, ms, num, n, path, false) << "\n\n";
                         write(ms, path_out, num);
                         break;
                     }
                 case 4:
                     {
                         system("cls");
-                        cout << "q_sort:\n" << test(q_sort, ms, num, n, path) << "\n\n";
+                        cout << "q_sort:\n" << test(q_sort, ms, num, n, path, false) << "\n\n";
                         write(ms, path_out, num);
                         break;
                     }
@@ -181,31 +180,25 @@ int main(int argc, char* argv[])
                 case 6:
                     {
                         system("cls");
-                        cout << "shell_sort:\n" << test(shell_sort, ms, num, n, path) << "\n\n";
+                        cout << "shell_sort:\n" << test(shell_sort, ms, num, n, path, false) << "\n\n";
                         write(ms, path_out, num);
                         break;
                     }
                 case 7:
                     {
                         system("cls");
-                        cout << "heap_sort:\n" << test(heap_sort, ms, num, n, path) << "\n\n";
+                        cout << "heap_sort:\n" << test(heap_sort, ms, num, n, path, false) << "\n\n";
                         write(ms, path_out, num);
                         break;
                     }
                 case 8:
                     {
                         system("cls");
-                        cout << "literal_sort:\n" << test(literal_sort, ms, num, n, path) << "\n\n";
-                        if(ms.is_Str == true && ms.is_Int == true)
-                        {
-                            ms.is_Int = false;
-                            write(ms, path_out, num);
-                            ms.is_Int = true;
-                        }
-                        else if(ms.is_Int == false && ms.is_Str == true)
-                        {
-                            write(ms, path_out, num);
-                        }
+                        ms.is_Str_read = true;
+                        cout << "literal_sort:\n" << test(literal_sort, ms, num, n, path, false) << "\n\n";
+                        write(ms, path_out, num);
+                        ms.is_Str_read = false;
+                        
                         break;
                     }
                 default:

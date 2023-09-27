@@ -8,24 +8,7 @@ void read(const dualtype& a, const address& path)
 {
     string line;
     
-    if(a.is_Int == true)
-    {
-        fstream fin(path.get_address(), fstream::in);
-        if(!fin.is_open())
-        {
-            cout << "\nthe file isn't opened!\n";
-            return;
-        }
-        stringstream ss;
-        for(int i = 0; getline(fin, line); ++i)
-        {
-            ss.clear();
-            ss << line;
-            ss >> a.Int[i];
-        }
-        fin.close();
-    }
-    if(a.is_Str == true)
+    if(a.is_Str_read)
     {
         fstream fin(path.get_address_str(), fstream::in);
         if(!fin.is_open())
@@ -36,34 +19,38 @@ void read(const dualtype& a, const address& path)
         for(int i = 0; getline(fin, line); ++i)
             a.Str[i] = line;
         fin.close();
+        return;
     }
     
+    fstream fin(path.get_address(), fstream::in);
+    if(!fin.is_open())
+    {
+        cout << "\nthe file isn't opened!\n";
+        return;
+    }
+    stringstream ss;
+    for(int i = 0; getline(fin, line); ++i)
+    {
+        ss.clear();
+        ss << line;
+        ss >> a.Int[i];
+    }
+    fin.close();
 }
 
 void write(const dualtype& a, const address& path, const int num)
 {
-    
-    
-    if(a.is_Int == true)
+    // ReSharper disable once IdentifierTypo
+    fstream fout(path.get_address(), fstream::trunc|fstream::out);
+    if(!fout.is_open())
     {
-        // ReSharper disable once IdentifierTypo
-        fstream fout(path.get_address(), fstream::trunc|fstream::out);
-        if(!fout.is_open())
-        {
-            cout << "the file isn't opened!\n";
-            return;
-        }
-        for(int i = 0; i < num; ++i)
-        {
-            string str = to_string(a.Int[i]) + '\n';
-            fout.write(str.c_str(), static_cast<streamsize>(str.size()));
-        }
-        fout.close();
+        cout << "the file isn't opened!\n";
+        return;
     }
-    if(a.is_Str == true)
+    
+    if(a.is_Str_read == true)
     {
         // ReSharper disable once IdentifierTypo
-        fstream fout(path.get_address_str(), fstream::trunc|fstream::out);
         if(!fout.is_open())
         {
             cout << "the file isn't opened!\n";
@@ -75,16 +62,23 @@ void write(const dualtype& a, const address& path, const int num)
             fout.write(str.c_str(), static_cast<streamsize>(str.size()));
         }
         fout.close();
+        a.is_Str_read = false;
     }
-
+    for(int i = 0; i < num; ++i)
+    {
+        string str = to_string(a.Int[i]) + '\n';
+        fout.write(str.c_str(), static_cast<streamsize>(str.size()));
+    }
+    fout.close();
+    
 }
 
 void print(const dualtype& a, const int num)
 {
-    if(a.is_Int == true)
+    if(a.is_Str == true)
         for(int i = 0; i < num; i++)
             cout << a.Int[i] << " ";
-    else if(a.is_Str == true)
+    else if(a.is_Str_read == true)
         for(int i = 0; i < num; i++)
             cout << a.Int[i] << " ";
     
