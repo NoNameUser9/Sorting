@@ -2,6 +2,7 @@
 #include <chrono>
 #include "struct.h"
 #include "io.h"
+
 using namespace std;  // NOLINT(clang-diagnostic-header-hygiene)
 
 /**
@@ -11,7 +12,7 @@ using namespace std;  // NOLINT(clang-diagnostic-header-hygiene)
  * \param num number of array elements
  * \return time in seconds
  */
-std::chrono::duration<double, std::ratio<1, 1>> time(void (*f)(const my_struct&, int), my_struct& a, int num);
+std::chrono::duration<double, std::ratio<1, 1>> time(void (*f)(const dualtype&, int), dualtype& a, int num);
 /**
  * \brief this function testing time for function complete in [n] iterations
  * \param f pointer to function
@@ -21,5 +22,5 @@ std::chrono::duration<double, std::ratio<1, 1>> time(void (*f)(const my_struct&,
  * \param path path to file with data
  * \return time in seconds
  */
-std::chrono::duration<double, std::ratio<1, 1>> test(void (*f)(const my_struct&, int), const my_struct& a, int num, int n, const address& path);
-void full_test(const my_struct& a, const int& num, const int& n, const address& path);
+std::chrono::duration<double, std::ratio<1, 1>> test(void (*f)(const dualtype&, int), const dualtype& a, int num, int n, const address& path);
+void full_test(const dualtype& a, const int& num, const int& n, const address& path);

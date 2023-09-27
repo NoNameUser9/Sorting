@@ -1,5 +1,4 @@
 ﻿#pragma once
-
 #include "struct.h"
 
 void swap(auto& a, auto& b) noexcept
@@ -14,41 +13,46 @@ void swap(auto& a, auto& b) noexcept
  * \param a a[num] array
  * \param num number of array elements
  */
-void bubble_sort(const my_struct& a, int num);
+void bubble_sort(const dualtype& a, int num);
 /**
  * \brief selects the smallest element and swap it with a[i]
  * \param a a[num] array
  * \param num number of array elements
  */
-void selection_sort(const my_struct& a, int num);
+void selection_sort(const dualtype& a, int num);
 /**
  * \brief go at the end of array and pulls small element to initial element of iteration
  * \param a a[num] array
  * \param num number of array elements
  */
-void insertion_sort(const my_struct& a, int num);
+void insertion_sort(const dualtype& a, int num);
 /**
  * \brief it's a quick sort - recursive sorting algorithm
  * \param a a[num] array
  * \param num number of array elements
  */
-void q_sort(const my_struct& a, int num);
+void q_sort(const dualtype& a, int num);
 /**
  * \brief Don't realized now!
  * \param a array
  * \param num nums of array elements
  */
-void merge_sort(const my_struct& a, int num);
+void merge_sort(const dualtype& a, int num);
 /**
  * \brief it's a Shell sort, quick and simple sorting algorithm
  * \param a array a[num]
  * \param num number of elements of array
  */
-void shell_sort(const my_struct& a, int num);
+void shell_sort(const dualtype& a, int num);
 /**
  * \brief heap sort(binary tree sort or pyramid sort)
  * \param a a[num] array
  * \param num number of array elements
  */
-void heap_sort(const my_struct& a, int num);
-void literal_sort(const my_struct& a, int num);
+void heap_sort(const dualtype& a, int num);
+/**
+ * \brief sorting by name
+ * \param a a[num] array
+ * \param num number of array elements
+ */
+void literal_sort(const dualtype& a, int num);

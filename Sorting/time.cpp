@@ -4,20 +4,18 @@
 
 using namespace std;
 
-chrono::duration<double, ratio<1, 1>> time(void (*f)(const my_struct&, int), const my_struct& a, const int num)
+chrono::duration<double, ratio<1, 1>> time(void (*f)(const dualtype&, int), const dualtype& a, const int num)
 {
     const auto start = chrono::system_clock::now();
-    if(a.type == _Int)
+    if(a.is_Int == true || a.is_Str == true)
         f(a, num);  // NOLINT(bugprone-branch-clone)
-    else if(a.type == _Str)
-        f(a, num);
         
     const auto end = chrono::system_clock::now();
     
     return chrono::duration<double, ratio<1, 1>>(end - start);  // NOLINT(modernize-return-braced-init-list)
 }
 
-chrono::duration<double, ratio<1, 1>> test(void (*f)(const my_struct&, int), const my_struct& a, const int num, const int n, const address& path)
+chrono::duration<double, ratio<1, 1>> test(void (*f)(const dualtype&, int), const dualtype& a, const int num, const int n, const address& path)
 {
     if(!path.try_open())
         return chrono::duration<double, ratio<1, 1>>(0);
@@ -33,7 +31,7 @@ chrono::duration<double, ratio<1, 1>> test(void (*f)(const my_struct&, int), con
     return t /= n;
 }
 
-void full_test(const my_struct& a, const int& num, const int& n, const address& path)
+void full_test(const dualtype& a, const int& num, const int& n, const address& path)
 {
     if(!path.try_open())
         return;
@@ -44,8 +42,8 @@ void full_test(const my_struct& a, const int& num, const int& n, const address& 
     cout << "q_sort:\n" << test(q_sort, a, num, n, path) << endl << endl;
     // ReSharper disable CommentTypo
     // cout << "merge_sort:\n" << test(merge_sort, a, num, n, path, type) << endl << endl;
-    // ReSharper restore CommentTypo
     cout << "shell_sort:\n" << test(shell_sort, a, num, n, path) << endl << endl;
     cout << "heap_sort:\n" << test(heap_sort, a, num, n, path) << endl << endl;
-    cout << "literal_sort:\n << " << test(literal_sort, a, num, n, path) << endl << endl;
+    // cout << "literal_sort:\n" << test(literal_sort, a, num, n, path) << endl << endl;
+    // ReSharper restore CommentTypo
 }

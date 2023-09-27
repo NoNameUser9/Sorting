@@ -2,24 +2,20 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include "struct.h"
 
 // ReSharper disable once CppCompileTimeConstantCanBeReplacedWithBooleanConstant
-void read(const my_struct& a, const address& path)
+void read(const dualtype& a, const address& path)
 {
-    fstream fin;
     string line;
-    string str = path.get_address();
-    fin.open(path.get_address(), fstream::in);
-
-    if(!fin.is_open())
+    
+    if(a.is_Int == true)
     {
-        cout << "\nthe file isn't opened!\n";
-        return;
-    }
-
-    if(a.type == _Int)
-    {
+        fstream fin(path.get_address(), fstream::in);
+        if(!fin.is_open())
+        {
+            cout << "\nthe file isn't opened!\n";
+            return;
+        }
         stringstream ss;
         for(int i = 0; getline(fin, line); ++i)
         {
@@ -27,57 +23,70 @@ void read(const my_struct& a, const address& path)
             ss << line;
             ss >> a.Int[i];
         }
+        fin.close();
     }
-    else if(a.type == _Str)
+    if(a.is_Str == true)
     {
+        fstream fin(path.get_address_str(), fstream::in);
+        if(!fin.is_open())
+        {
+            cout << "\nthe file isn't opened!\n";
+            return;
+        }
         for(int i = 0; getline(fin, line); ++i)
-            a.str[i] = line;
+            a.Str[i] = line;
+        fin.close();
     }
     
-    fin.close();
 }
 
-void write(const my_struct& a, const address& path, const int num)
+void write(const dualtype& a, const address& path, const int num)
 {
-    // ReSharper disable once IdentifierTypo
-    fstream fout;
     
-    fout.open(path.get_address(), fstream::trunc|fstream::out);
     
-    if(!fout.is_open())
+    if(a.is_Int == true)
     {
-        cout << "the file isn't opened!\n";
-        return;
-    }
-    
-    if(a.type == _Int)
-    {
+        // ReSharper disable once IdentifierTypo
+        fstream fout(path.get_address(), fstream::trunc|fstream::out);
+        if(!fout.is_open())
+        {
+            cout << "the file isn't opened!\n";
+            return;
+        }
         for(int i = 0; i < num; ++i)
         {
             string str = to_string(a.Int[i]) + '\n';
             fout.write(str.c_str(), static_cast<streamsize>(str.size()));
         }
+        fout.close();
     }
-    else if(a.type == _Str)
+    if(a.is_Str == true)
     {
+        // ReSharper disable once IdentifierTypo
+        fstream fout(path.get_address_str(), fstream::trunc|fstream::out);
+        if(!fout.is_open())
+        {
+            cout << "the file isn't opened!\n";
+            return;
+        }
         for(int i = 0; i < num; ++i)
         {
-            string str = a.str[i] + '\n';
+            string str = a.Str[i] + '\n';
             fout.write(str.c_str(), static_cast<streamsize>(str.size()));
         }
+        fout.close();
     }
 
-    fout.close();
 }
 
-void print(const my_struct* a, const int num)
+void print(const dualtype& a, const int num)
 {
-    if(a->type == _Int)
+    if(a.is_Int == true)
         for(int i = 0; i < num; i++)
-            cout << a->Int[i] << " ";
-    else if(a->type == _Str)
+            cout << a.Int[i] << " ";
+    else if(a.is_Str == true)
         for(int i = 0; i < num; i++)
-            cout << a->Int[i] << " ";
+            cout << a.Int[i] << " ";
     
     cout << endl;
 }
@@ -130,7 +139,7 @@ address::address(const string& path, const wr_mode WR_mode = write|read)  // NOL
 }
 
 // ReSharper disable CppInconsistentNaming
-address::address(const string& path, const mode _Mode = relative|absolute, const wr_mode WR_mode = write|read|custom)  // NOLINT(cppcoreguidelines-pro-type-member-init, clang-diagnostic-reserved-identifier, bugprone-reserved-identifier)
+address::address(const string& path, const path_mode _Mode = relative|absolute, const wr_mode WR_mode = write|read|custom)  // NOLINT(cppcoreguidelines-pro-type-member-init, clang-diagnostic-reserved-identifier, bugprone-reserved-identifier)
 // ReSharper restore CppInconsistentNaming
 {
     set_address(path, _Mode, WR_mode);
@@ -147,7 +156,7 @@ address::address(const string& path)  // NOLINT(cppcoreguidelines-pro-type-membe
 
 // ReSharper disable CppInconsistentNaming
 // ReSharper disable once CppCompileTimeConstantCanBeReplacedWithBooleanConstant
-void address::set_address(const string& path, const mode _Mode = relative|absolute, const wr_mode WR_mode = write|read|custom)  // NOLINT(clang-diagnostic-reserved-identifier, bugprone-reserved-identifier)
+void address::set_address(const string& path, const path_mode _Mode = relative|absolute, const wr_mode WR_mode = write|read|custom)  // NOLINT(clang-diagnostic-reserved-identifier, bugprone-reserved-identifier)
 // ReSharper restore CppInconsistentNaming
 {
     if(WR_mode == write)
@@ -180,9 +189,19 @@ void address::set_address(const string& path, const mode _Mode = relative|absolu
         cout << "wrong address::get_address _Mode";
 }
 
+void address::set_address_str(const string& path)
+{
+    path_str_ = path;
+}
+
 string address::get_address() const
 {
     return path_;
+}
+
+string address::get_address_str() const
+{
+    return path_str_;
 }
 
 string address::get_mode() const

@@ -1,18 +1,16 @@
 ﻿#pragma once
 #include <string>
-typedef std::byte mode;
+
+typedef std::byte path_mode;
 typedef std::byte wr_mode;
-enum my_enum : std::underlying_type_t<std::byte>
-{
-    _Int = 0,  // NOLINT(clang-diagnostic-reserved-identifier, bugprone-reserved-identifier)
-    // ReSharper disable once CppInconsistentNaming
-    _Str = 1  // NOLINT(bugprone-reserved-identifier, clang-diagnostic-reserved-identifier)
-};
 
-struct my_struct
+// ReSharper disable once IdentifierTypo
+struct dualtype
 {
-    std::string* str{};
+    // ReSharper disable CppInconsistentNaming
     int* Int{};
-    mutable std::underlying_type_t<std::byte> type = _Int;
+    std::string* Str{};
+    bool is_Int = false;
+    bool is_Str = false;
+    // ReSharper restore CppInconsistentNaming
 };
-
