@@ -1,13 +1,8 @@
 ﻿#include "sort.h"
 
-void swap(int& a, int& b) noexcept
-{
-    const int temp = b;
-    b = a;
-    a = temp;
-}
+#include "struct.h"
 
-void bubble_sort(int* a, int num)
+void bubble_sort(const my_struct& a, int num)
 {
     bool swapped = false;
 
@@ -15,9 +10,9 @@ void bubble_sort(int* a, int num)
     {
         for(int i = 0; i < num - 1; ++i)
         {
-            if(a[i] > a[i+1])
+            if(a.Int[i] > a.Int[i+1])
             {
-                swap(a[i], a[i+1]);
+                swap(a.Int[i], a.Int[i+1]);
                 swapped = true;
             }
         }
@@ -28,28 +23,28 @@ void bubble_sort(int* a, int num)
     }
 }
 
-void selection_sort(int* a, const int num)
+void selection_sort(const my_struct& a, const int num)
 {
     int index = 0;
     for(int i = 0; i < num - 1; ++i)
     {
         for(int i1 = i; i1 < num; ++i1)
         {
-            if(a[i1] < a[index])
+            if(a.Int[i1] < a.Int[index])
                 index = i1;
         }
-        swap(a[i], a[index]);
+        swap(a.Int[i], a.Int[index]);
     }
 }
 
-void insertion_sort(int* a, const int num)
+void insertion_sort(const my_struct& a, const int num)
 {
     for(int i = 1; i < num; ++i)
     {
         for(int i1 = i; i1 > 0; --i1)
         {
-            if(a[i1] < a[i1-1])
-                swap(a[i1], a[i1-1]);
+            if(a.Int[i1] < a.Int[i1-1])
+                swap(a.Int[i1], a.Int[i1-1]);
         }
     }
 }
@@ -61,21 +56,21 @@ void insertion_sort(int* a, const int num)
  * \param pivot a[pivot] is a pivot of a[] array
  * \return pivot point sorted piece of a[] array
  */
-int partition(int* a, const int start, int pivot)
+int partition(const my_struct& a, const int start, int pivot)
 {
     int i = start;
     while(i < pivot)
     {
-        if(a[i] > a[pivot] && i == pivot-1)
+        if(a.Int[i] > a.Int[pivot] && i == pivot-1)
         {
-            swap(a[i], a[pivot]);
+            swap(a.Int[i], a.Int[pivot]);
             pivot--;
         }
 		
-        else if(a[i] > a[pivot])
+        else if(a.Int[i] > a.Int[pivot])
         {
-            swap(a[pivot - 1], a[pivot]);
-            swap(a[i], a[pivot]);
+            swap(a.Int[pivot - 1], a.Int[pivot]);
+            swap(a.Int[i], a.Int[pivot]);
             pivot--;
         }
 		
@@ -84,7 +79,7 @@ int partition(int* a, const int start, int pivot)
     return pivot;
 }
 
-void q_sort_r(int* a, const int start, const int end)
+void q_sort_r(const my_struct& a, const int start, const int end)
 {
     if(start < end)
     {
@@ -95,12 +90,12 @@ void q_sort_r(int* a, const int start, const int end)
     }
 }
 
-void q_sort(int* a, const int num)
+void q_sort(const my_struct& a, const int num)
 {
     q_sort_r(a, 0, num-1);
 }
 
-void merge_sort_r(int* a, const int lo, const int hi)
+void merge_sort_r(const my_struct& a, const int lo, const int hi)
 {
     if(hi <= lo)
         return;
@@ -110,29 +105,49 @@ void merge_sort_r(int* a, const int lo, const int hi)
 }
 
 
-void merge_sort(int* a, const int num)
+void merge_sort(const my_struct& a, const int num)
 {
     merge_sort_r(a, 0, num);
 }
 
-void shell_sort(int* a, const int num)
+void shell_sort(const my_struct& a, const int num)
 {
     double range = num;
-    
-    while(true)
+    if(a.type == _Int)
     {
-        constexpr double factor = 1.2473309;
-        
-        for(int i = 0, j = static_cast<int>(range)-1; j-i >= 1 && j < num; ++i, ++j)
+        while(true)
         {
-            if(a[i] > a[j])
-                swap(a[i], a[j]);
+            constexpr double factor = 1.2473309;
+            
+            for(int i = 0, j = static_cast<int>(range)-1; j-i >= 1 && j < num; ++i, ++j)
+            {
+                if(a.Int[i] > a.Int[j])
+                    swap(a.Int[i], a.Int[j]);
+            }
+            
+            if(range <= 1)
+            break;
+            
+            range /= factor;
         }
-        
-        if(range <= 1)
-        break;
-        
-        range /= factor;
+    }
+    else if(a.type == _Str)
+    {
+        while(true)
+        {
+            constexpr double factor = 1.2473309;
+            
+            for(int i = 0, j = static_cast<int>(range)-1; j-i >= 1 && j < num; ++i, ++j)
+            {
+                if(a.str[i] > a.str[j])
+                    swap(a.str[i], a.str[j]);
+            }
+            
+            if(range <= 1)
+                break;
+            
+            range /= factor;
+        }
     }
 }
 
@@ -143,43 +158,61 @@ void shell_sort(int* a, const int num)
  * \param n number of array elements
  * \param i largest element of array
  */
-void heapify(int* a, const int n, const int i)
+void heapify(const my_struct& a, const int n, const int i)
 {
     int largest = i;
     
-    if(const int l = 2*i + 1; l < n && a[l] > a[largest])
+    if(const int l = 2*i + 1; l < n && a.Int[l] > a.Int[largest])
         largest = l;
     
-    if(const int r = 2*i + 2; r < n && a[r] > a[largest])
+    if(const int r = 2*i + 2; r < n && a.Int[r] > a.Int[largest])
         largest = r;
 
     if(largest != i)
     {
-        swap(a[largest], a[i]);
+        swap(a.Int[largest], a.Int[i]);
         heapify(a, n, largest);
     }
 }
 
-void heap_sort(int* a, const int num)
+void heap_sort(const my_struct& a, const int num)
 {
     for(int i = num/2 - 1; i >= 0; --i)
         heapify(a, num, i);
 
     for(int i = num-1; i>= 0; --i)
     {
-        swap(a[0], a[i]);
+        swap(a.Int[0], a.Int[i]);
         heapify(a, i, 0);
     }
 }
 
-void literal_sort(const std::string* a, const int num)
+// void shell_sort_lit(my_struct* a, const int num)
+// {
+//     double range = num;
+//     
+//     while(true)
+//     {
+//         constexpr double factor = 1.2473309;
+//         
+//         for(int i = 0, j = static_cast<int>(range)-1; j-i >= 1 && j < num; ++i, ++j)
+//         {
+//             if(a->Int[i] > a->Int[j])
+//                 swap(a[i], a[j]);
+//         }
+//         
+//         if(range <= 1)
+//             break;
+//         
+//         range /= factor;
+//     }
+// }
+
+void literal_sort(const my_struct& a, const int num)
 {
     // ReSharper disable once CppCStyleCast
     // ReSharper disable once CommentTypo
-    shell_sort((int*)a->at(0), num);  // NOLINT(clang-diagnostic-cast-qual, clang-diagnostic-cast-align, performance-no-int-to-ptr, clang-diagnostic-int-to-pointer-cast)
-    // for(int i = 0; i < num; ++i)
-    // {
-    //     
-    // }
-    
+    // a.type = _Str;
+    shell_sort(a, num);  // NOLINT(clang-diagnostic-cast-qual, clang-diagnostic-cast-align, performance-no-int-to-ptr, clang-diagnostic-int-to-pointer-cast)
+    // a.type = _Int;
 }

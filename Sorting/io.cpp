@@ -5,12 +5,11 @@
 #include "struct.h"
 
 // ReSharper disable once CppCompileTimeConstantCanBeReplacedWithBooleanConstant
-void read(const my_struct& a, const address& path, const std::underlying_type_t<std::byte> type = _Str|_Int)
+void read(const my_struct& a, const address& path)
 {
     fstream fin;
-    stringstream ss;
     string line;
-
+    string str = path.get_address();
     fin.open(path.get_address(), fstream::in);
 
     if(!fin.is_open())
@@ -19,8 +18,9 @@ void read(const my_struct& a, const address& path, const std::underlying_type_t<
         return;
     }
 
-    if(type == _Int)
+    if(a.type == _Int)
     {
+        stringstream ss;
         for(int i = 0; getline(fin, line); ++i)
         {
             ss.clear();
@@ -28,20 +28,16 @@ void read(const my_struct& a, const address& path, const std::underlying_type_t<
             ss >> a.Int[i];
         }
     }
-    else if(type == _Str)
+    else if(a.type == _Str)
     {
         for(int i = 0; getline(fin, line); ++i)
-        {
-            ss.clear();
-            ss << line;
-            ss >> a.str[i];
-        }
+            a.str[i] = line;
     }
     
     fin.close();
 }
 
-void write(const my_struct& a, const address& path, const int num, const std::underlying_type_t<std::byte> type = _Str|_Int)
+void write(const my_struct& a, const address& path, const int num)
 {
     // ReSharper disable once IdentifierTypo
     fstream fout;
@@ -54,7 +50,7 @@ void write(const my_struct& a, const address& path, const int num, const std::un
         return;
     }
     
-    if(type == _Int)
+    if(a.type == _Int)
     {
         for(int i = 0; i < num; ++i)
         {
@@ -62,7 +58,7 @@ void write(const my_struct& a, const address& path, const int num, const std::un
             fout.write(str.c_str(), static_cast<streamsize>(str.size()));
         }
     }
-    else if(type == _Str)
+    else if(a.type == _Str)
     {
         for(int i = 0; i < num; ++i)
         {
@@ -74,10 +70,14 @@ void write(const my_struct& a, const address& path, const int num, const std::un
     fout.close();
 }
 
-void print(const int* a, const int num)
+void print(const my_struct* a, const int num)
 {
-    for(int i = 0; i < num; i++)
-        cout << a[i] << " ";
+    if(a->type == _Int)
+        for(int i = 0; i < num; i++)
+            cout << a->Int[i] << " ";
+    else if(a->type == _Str)
+        for(int i = 0; i < num; i++)
+            cout << a->Int[i] << " ";
     
     cout << endl;
 }
@@ -129,6 +129,13 @@ address::address(const string& path, const wr_mode WR_mode = write|read)  // NOL
     mode_ = absolute;
 }
 
+// ReSharper disable CppInconsistentNaming
+address::address(const string& path, const mode _Mode = relative|absolute, const wr_mode WR_mode = write|read|custom)  // NOLINT(cppcoreguidelines-pro-type-member-init, clang-diagnostic-reserved-identifier, bugprone-reserved-identifier)
+// ReSharper restore CppInconsistentNaming
+{
+    set_address(path, _Mode, WR_mode);
+}
+
 // ReSharper disable once CppPossiblyUninitializedMember
 address::address(const string& path)  // NOLINT(cppcoreguidelines-pro-type-member-init)
 {
@@ -140,7 +147,7 @@ address::address(const string& path)  // NOLINT(cppcoreguidelines-pro-type-membe
 
 // ReSharper disable CppInconsistentNaming
 // ReSharper disable once CppCompileTimeConstantCanBeReplacedWithBooleanConstant
-void address::set_address(const string& path,const mode _Mode = relative|absolute, const wr_mode WR_mode = write|read|custom)  // NOLINT(clang-diagnostic-reserved-identifier, bugprone-reserved-identifier)
+void address::set_address(const string& path, const mode _Mode = relative|absolute, const wr_mode WR_mode = write|read|custom)  // NOLINT(clang-diagnostic-reserved-identifier, bugprone-reserved-identifier)
 // ReSharper restore CppInconsistentNaming
 {
     if(WR_mode == write)
@@ -156,17 +163,17 @@ void address::set_address(const string& path,const mode _Mode = relative|absolut
     else if(WR_mode == custom)
     {
         wr_mode_ = custom;
-        wr_ = custom_;
+        wr_ = "";
     }
     
     if(_Mode == relative)
     {
-        path_ = "~\\" + path + "\\" + wr_;
+        path_ = "~\\" + path + wr_;
         mode_ = relative;
     }
     else if (_Mode == absolute)
     {
-        path_ = path + "\\" + wr_;  // NOLINT(bugprone-branch-clone)
+        path_ = path + wr_;  // NOLINT(bugprone-branch-clone)
         mode_ = absolute;
     }
     else

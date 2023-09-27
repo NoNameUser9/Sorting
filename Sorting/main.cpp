@@ -2,29 +2,37 @@
 // ReSharper disable CppClangTidyModernizeRawStringLiteral
 // ReSharper disable StringLiteralTypo
 // ReSharper disable CppClangTidyConcurrencyMtUnsafe
+#define VERSION "v1.2.1"
 #include <iostream>
 #include "io.h"
 #include "time.h"  // NOLINT(modernize-deprecated-headers)
 #include "sort.h"
 #include "struct.h"
-#define VERSION "v1.1.0"
 using namespace std;
 
 int main(int argc, char* argv[])
 {
     const string paths = "C:\\Users\\User\\Documents";
+    const string paths_name = "C:\\Users\\User\\Documents\\names.csv";
+    const string paths_name_out = "C:\\Users\\User\\Documents\\names_out.csv";
+    address names_adr(paths_name, address::absolute, address::custom);
+    address names_adr_out(paths_name_out,address::absolute, address::custom);
+
     constexpr int num = 5000;
     int n = 100;
-
-    my_struct ms{};
     
-    int a[num] = {};
-    string* a_s{};
+    int a[num]{};
+    string a_s[num]{};
+    my_struct ms_int{};
+    ms_int.Int = a;
+    my_struct ms_str{};
+    ms_str.str = a_s;
+    ms_str.type = _Str;
     
-    ms.Int = a;
-    ms.str = a_s;
-    // int str_num = 25898;
-
+    read(ms_str, names_adr);
+    literal_sort(ms_str, num);
+    write(ms_str, names_adr_out, num);
+    
     address path(paths), path_out(paths, address::write);
     mode mode1 = address::relative;
     string str_m;
@@ -111,7 +119,7 @@ int main(int argc, char* argv[])
             {
                 system("cls");
                 cout << "full test of sorting\n\n";
-                full_test(ms, num, n, path, _Int);
+                full_test(ms_int, num, n, path);
                 system("pause");
                 break;
             }
@@ -125,52 +133,59 @@ int main(int argc, char* argv[])
                         "4.q_sort\n"
                         "5.\n"
                         "6.shell_sort\n"
-                        "7.heap_sort\n";
+                        "7.heap_sort\n"
+                        "8.literal_sort\n";
                 cin >> choice_2;
                 switch (choice_2)
                 {
                 case 1:
                     {
                         system("cls");
-                        cout << "bubble_sort:\n" << test(bubble_sort, ms, num, n, path, _Int) << "\n\n";
+                        cout << "bubble_sort:\n" << test(bubble_sort, ms_int, num, n, path) << "\n\n";
                         break;
                     }
                 case 2:
                     {
                         system("cls");
-                        cout << "selection_sort:\n" << test(selection_sort, ms, num, n, path, _Int) << "\n\n";
+                        cout << "selection_sort:\n" << test(selection_sort, ms_int, num, n, path) << "\n\n";
                         break;
                     }
                 case 3:
                     {
                         system("cls");
-                        cout << "insertion_sort:\n" << test(insertion_sort, ms, num, n, path, _Int) << "\n\n";
+                        cout << "insertion_sort:\n" << test(insertion_sort, ms_int, num, n, path) << "\n\n";
                         break;
                     }
                 case 4:
                     {
                         system("cls");
-                        cout << "q_sort:\n" << test(q_sort, ms, num, n, path, _Int) << "\n\n";
+                        cout << "q_sort:\n" << test(q_sort, ms_int, num, n, path) << "\n\n";
                         break;
                     }
                 case 5:
                     {
                         system("cls");
                         cout << "it's not work yet\n";
-                        cout << "shell_sort:\n" << test(merge_sort, ms, num, n, path, _Int) << "\n\n";
+                        cout << "shell_sort:\n" << test(merge_sort, ms_int, num, n, path) << "\n\n";
                         system("pause");
                         break;
                     }
                 case 6:
                     {
                         system("cls");
-                        cout << "shell_sort:\n" << test(shell_sort, ms, num, n, path, _Int) << "\n\n";
+                        // cout << "shell_sort:\n" << test(shell_sort, ms, num, n, path) << "\n\n";
                         break;
                     }
                 case 7:
                     {
                         system("cls");
-                        cout << "heap_sort:\n" << test(heap_sort, ms, num, n, path, _Int) << "\n\n";
+                        cout << "heap_sort:\n" << test(heap_sort, ms_int, num, n, path) << "\n\n";
+                        break;
+                    }
+                case 8:
+                    {
+                        system("cls");
+                        cout << "literal_sort:\n" << test(literal_sort, ms_str, num, n, path) << "\n\n";
                         break;
                     }
                 default:
@@ -185,7 +200,7 @@ int main(int argc, char* argv[])
             }
         case 8:
             {
-                write(ms, path_out, num, _Int);
+                write(ms_int, path_out, num);
                 goto end;  // NOLINT(cppcoreguidelines-avoid-goto, hicpp-avoid-goto)
             }
         default:
