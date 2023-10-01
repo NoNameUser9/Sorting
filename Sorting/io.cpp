@@ -115,7 +115,7 @@ address::address(const wr_mode WR_mode = write|read)
 
 // ReSharper disable once CppPossiblyUninitializedMember
 // ReSharper disable once CppInconsistentNaming
-address::address(const string& path, const wr_mode WR_mode = write|read)  // NOLINT(cppcoreguidelines-pro-type-member-init)
+address::address(const string& path, const wr_mode WR_mode = write|read|custom)  // NOLINT(cppcoreguidelines-pro-type-member-init)
 {
     if(WR_mode == write)
     {
@@ -128,6 +128,12 @@ address::address(const string& path, const wr_mode WR_mode = write|read)  // NOL
         wr_mode_ = read;
         wr_ = read_;
         path_ = path + "\\" + wr_;
+    }
+    else if(WR_mode == custom)
+    {
+        wr_mode_ = custom;
+        wr_ = "";
+        path_ = path;
     }
     mode_ = absolute;
 }

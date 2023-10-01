@@ -126,20 +126,29 @@ void q_sort(const dualtype& a, const int& num, const bool& to_low)
         tolow(a, num);
 }
 
-void merge_sort_r(const dualtype& a, const int lo, const int hi)
+void merge_sort_r(int* a, const int num)
 {
-    if(hi <= lo)
-        return;
-    const int mid = lo + (hi - lo) / 2;
-    merge_sort_r(a, lo, mid);
-    merge_sort_r(a, mid+1, hi);
+    if (num < 2)return;
+    merge_sort_r(a, num / 2);
+    merge_sort_r(&a[num / 2], num - (num / 2));
+    const auto buf = new int[num];
+    // ReSharper disable once IdentifierTypo
+    int idbuf = 0, idl = 0, idr = num / 2 ;
+    while ((idl < num / 2) && (idr < num))
+        if (a[idl] < a[idr]) 
+            buf[idbuf++] = a[idl++];
+        else
+            buf[idbuf++] = a[idr++];
+    while (idl < num / 2) buf[idbuf++] = a[idl++];
+    while (idr < num) buf[idbuf++] = a[idr++];
+    for (idl = 0; idl < num; idl++)a[idl] = buf[idl];
+    delete[]buf;
 }
 
 
 void merge_sort(const dualtype& a, const int& num, const bool& to_low)
 {
-    merge_sort_r(a, 0, num);
-    
+    merge_sort_r(a.Int, num);
     if(to_low == true)
         tolow(a, num);
 }

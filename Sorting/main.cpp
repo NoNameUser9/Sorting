@@ -2,7 +2,7 @@
 // ReSharper disable CppClangTidyModernizeRawStringLiteral
 // ReSharper disable StringLiteralTypo
 // ReSharper disable CppClangTidyConcurrencyMtUnsafe
-#define VERSION "v1.2.3"
+#define VERSION "v1.2.5"
 #include <iostream>
 #include "io.h"
 #include "time.h"  // NOLINT(modernize-deprecated-headers)
@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
     // address names_adr_out(paths_name_out,address::absolute, address::custom);
     
     constexpr int num = 5000;
-    int n = 1; //число итераций time  // NOLINT(clang-diagnostic-invalid-utf8)
+    int n = 100; //число итераций time  // NOLINT(clang-diagnostic-invalid-utf8)
     
     int a[num]{};
     string a_s[num]{};
@@ -29,8 +29,9 @@ int main(int argc, char* argv[])
     ms.Str = a_s;
     
     address path(paths), path_out(paths, address::write);
-    path.set_address_str(path.get_address());
-    path_out.set_address_str(path_out.get_address());
+    // address path(paths_name, address::custom), path_out(paths_name_out, address::custom);
+    path.set_address_str(paths_name);
+    path_out.set_address_str(paths_name_out);
     
     path_mode mode1 = address::relative;
     string str_m;
@@ -84,6 +85,9 @@ int main(int argc, char* argv[])
                 string s_path;
                 cout << "enter the " << str_m << " address of indata file(.csv):";
                 cin >> s_path;
+                if(mode1 == address::absolute)
+                    path.set_address(s_path, mode1, address::custom);
+                else
                 path.set_address(s_path, mode1, address::read);
                 break;
             }
@@ -93,6 +97,9 @@ int main(int argc, char* argv[])
                 string s_path;
                 cout << "enter the " << str_m << " address of outdata file(.csv):";
                 cin >> s_path;
+                if(mode1 == address::absolute)
+                    path_out.set_address(s_path, mode1, address::custom);
+                else
                 path_out.set_address(s_path, mode1, address::write);
                 break;
             }
@@ -173,8 +180,9 @@ int main(int argc, char* argv[])
                     {
                         system("cls");
                         cout << "it's not work yet!\n";
-                        // cout << "merge_sort:\n" << test(merge_sort, ms_int, num, n, path) << "\n\n";
-                        system("pause");
+                        cout << "merge_sort:\n" << test(merge_sort, ms, num, n, path, false) << "\n\n";
+                        write(ms, path_out, num);
+                        // system("pause");
                         break;
                     }
                 case 6:
@@ -196,7 +204,8 @@ int main(int argc, char* argv[])
                         system("cls");
                         ms.is_Str_read = true;
                         cout << "literal_sort:\n" << test(literal_sort, ms, num, n, path, false) << "\n\n";
-                        write(ms, path_out, num);
+                        address ps(paths_name_out);
+                        write(ms, ps, num);
                         ms.is_Str_read = false;
                         
                         break;

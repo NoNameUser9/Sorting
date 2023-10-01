@@ -43,7 +43,7 @@ void full_test(const dualtype& a, const int& num, const int& n, const address& p
     cout << "insertion_sort:\n" << test(insertion_sort, a, num, n, path, to_low) << endl << endl;
     cout << "q_sort:\n" << test(q_sort, a, num, n, path, to_low) << endl << endl;
     // ReSharper disable CommentTypo
-    // cout << "merge_sort:\n" << test(merge_sort, a, num, n, path, type) << endl << endl;
+    cout << "merge_sort:\n" << test(merge_sort, a, num, n, path, to_low) << endl << endl;
     cout << "shell_sort:\n" << test(shell_sort, a, num, n, path, to_low) << endl << endl;
     cout << "heap_sort:\n" << test(heap_sort, a, num, n, path, to_low) << endl << endl;
     a.is_Str_read = true;

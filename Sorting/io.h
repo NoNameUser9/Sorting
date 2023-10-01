@@ -50,8 +50,8 @@ public:
  static constexpr wr_mode read = static_cast<wr_mode>(1);
  static constexpr wr_mode custom = static_cast<wr_mode>(2);
 private:
- const string write_ = "\\data_out.csv";
- const string read_ = "\\data.csv";
+ const string write_ = "data_out.csv";
+ const string read_ = "data.csv";
  string wr_;
  path_mode mode_;
  wr_mode wr_mode_;
