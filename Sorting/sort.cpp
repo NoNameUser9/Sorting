@@ -238,9 +238,7 @@ void heap_sort(const dualtype& a, const int& num, const bool& to_low)
 
 void literal_sort(const dualtype& a, const int& num, const bool& to_low)
 {
-    // a.is_Str_read = true;
     // ReSharper disable once CommentTypo
     shell_sort(a, num, to_low);  // NOLINT(clang-diagnostic-cast-qual, clang-diagnostic-cast-align, performance-no-int-to-ptr, clang-diagnostic-int-to-pointer-cast)
-    // a.is_Str_read = false;
     a.is_Str = true;
 }

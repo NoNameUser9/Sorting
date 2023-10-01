@@ -6,8 +6,13 @@
 // ReSharper disable once CppCompileTimeConstantCanBeReplacedWithBooleanConstant
 void read(const dualtype& a, const address& path)
 {
-    string line;
+    if(path.get_mode() != address::read)
+    {
+        cout << "\nthe file isn't opened!\n";
+        return;
+    }
     
+    string line;
     if(a.is_Str_read)
     {
         fstream fin(path.get_address_str(), fstream::in);
@@ -28,6 +33,7 @@ void read(const dualtype& a, const address& path)
         cout << "\nthe file isn't opened!\n";
         return;
     }
+    
     stringstream ss;
     for(int i = 0; getline(fin, line); ++i)
     {
@@ -35,23 +41,24 @@ void read(const dualtype& a, const address& path)
         ss << line;
         ss >> a.Int[i];
     }
+    
     fin.close();
 }
 
 void write(const dualtype& a, const address& path, const int num)
 {
-    // ReSharper disable once IdentifierTypo
-    fstream fout(path.get_address(), fstream::trunc|fstream::out);
-    if(!fout.is_open())
+    if(path.get_mode() != address::write)
     {
-        cout << "the file isn't opened!\n";
+        cout << "\nthe file isn't opened!\n";
         return;
     }
     
+    // ReSharper disable once IdentifierTypo
     if(a.is_Str_read == true)
     {
+        fstream fout_str(path.get_address_str(), fstream::trunc|fstream::out);
         // ReSharper disable once IdentifierTypo
-        if(!fout.is_open())
+        if(!fout_str.is_open())
         {
             cout << "the file isn't opened!\n";
             return;
@@ -59,28 +66,42 @@ void write(const dualtype& a, const address& path, const int num)
         for(int i = 0; i < num; ++i)
         {
             string str = a.Str[i] + '\n';
-            fout.write(str.c_str(), static_cast<streamsize>(str.size()));
+            fout_str.write(str.c_str(), static_cast<streamsize>(str.size()));
         }
-        fout.close();
+        fout_str.close();
         a.is_Str_read = false;
+        return;
     }
+    
+    // ReSharper disable once IdentifierTypo
+    fstream fout(path.get_address(), fstream::trunc|fstream::out);
+    if(!fout.is_open())
+    {
+        cout << "the file isn't opened!\n";
+        fout.close();
+        return;
+    }
+    
     for(int i = 0; i < num; ++i)
     {
         string str = to_string(a.Int[i]) + '\n';
         fout.write(str.c_str(), static_cast<streamsize>(str.size()));
     }
-    fout.close();
     
+    fout.close();
 }
 
 void print(const dualtype& a, const int num)
 {
-    if(a.is_Str == true)
+    if(a.is_Str_read == false)
         for(int i = 0; i < num; i++)
             cout << a.Int[i] << " ";
-    else if(a.is_Str_read == true)
+    else
+    {
         for(int i = 0; i < num; i++)
-            cout << a.Int[i] << " ";
+            cout << a.Str[i] << " ";
+        a.is_Str_read = false;
+    }
     
     cout << endl;
 }
@@ -88,58 +109,48 @@ void print(const dualtype& a, const int num)
 // ReSharper disable once CppPossiblyUninitializedMember
 address::address()  // NOLINT(cppcoreguidelines-pro-type-member-init, modernize-use-equals-default)
 {
-    mode_ = relative;
+    path_mode_ = relative;
     wr_mode_ = read;
-    wr_ = read_;
-    path_ = "~\\" + wr_;
+    path_ = "~\\";
 }
 
 // ReSharper disable once CppInconsistentNaming
 address::address(const wr_mode WR_mode = write|read)
 {
-    mode_ = relative;
+    path_mode_ = relative;
     
     if(WR_mode == write)
     {
         wr_mode_ = write;
-        wr_ = write_;
-        path_ = "~\\" + wr_;
+        path_ = "~\\";
     }
     else if(WR_mode == read)
     {
         wr_mode_ = read;
-        wr_ = read_;
-        path_ = "~\\" + wr_;
+        path_ = "~\\";
     }
 }
 
 // ReSharper disable once CppPossiblyUninitializedMember
 // ReSharper disable once CppInconsistentNaming
-address::address(const string& path, const wr_mode WR_mode = write|read|custom)  // NOLINT(cppcoreguidelines-pro-type-member-init)
+address::address(const string& path, const wr_mode WR_mode = write|read)  // NOLINT(cppcoreguidelines-pro-type-member-init)
 {
     if(WR_mode == write)
     {
         wr_mode_ = write;
-        wr_ = write_;
-        path_ = path + "\\" + wr_;
+        path_ = path;
     }
     else if(WR_mode == read)
     {
         wr_mode_ = read;
-        wr_ = read_;
-        path_ = path + "\\" + wr_;
-    }
-    else if(WR_mode == custom)
-    {
-        wr_mode_ = custom;
-        wr_ = "";
         path_ = path;
     }
-    mode_ = absolute;
+
+    path_mode_ = absolute;
 }
 
 // ReSharper disable CppInconsistentNaming
-address::address(const string& path, const path_mode _Mode = relative|absolute, const wr_mode WR_mode = write|read|custom)  // NOLINT(cppcoreguidelines-pro-type-member-init, clang-diagnostic-reserved-identifier, bugprone-reserved-identifier)
+address::address(const string& path, const path_mode _Mode = relative|absolute, const wr_mode WR_mode = write|read)  // NOLINT(cppcoreguidelines-pro-type-member-init, clang-diagnostic-reserved-identifier, bugprone-reserved-identifier)
 // ReSharper restore CppInconsistentNaming
 {
     set_address(path, _Mode, WR_mode);
@@ -149,41 +160,29 @@ address::address(const string& path, const path_mode _Mode = relative|absolute, 
 address::address(const string& path)  // NOLINT(cppcoreguidelines-pro-type-member-init)
 {
     wr_mode_ = read;
-    wr_ = read_;
-    path_ = path + "\\" + wr_;
-    mode_ = absolute;
+    path_ = path;
+    path_mode_ = absolute;
 }
 
 // ReSharper disable CppInconsistentNaming
 // ReSharper disable once CppCompileTimeConstantCanBeReplacedWithBooleanConstant
-void address::set_address(const string& path, const path_mode _Mode = relative|absolute, const wr_mode WR_mode = write|read|custom)  // NOLINT(clang-diagnostic-reserved-identifier, bugprone-reserved-identifier)
+void address::set_address(const string& path, const path_mode _Mode = relative|absolute, const wr_mode WR_mode = write|read)  // NOLINT(clang-diagnostic-reserved-identifier, bugprone-reserved-identifier)
 // ReSharper restore CppInconsistentNaming
 {
     if(WR_mode == write)
-    {
         wr_mode_ = write;
-        wr_ = write_;
-    }
     else if(WR_mode == read)
-    {
         wr_mode_ = read;
-        wr_ = read_;
-    }
-    else if(WR_mode == custom)
-    {
-        wr_mode_ = custom;
-        wr_ = "";
-    }
     
     if(_Mode == relative)
     {
-        path_ = "~\\" + path + wr_;
-        mode_ = relative;
+        path_ = "~\\" + path;
+        path_mode_ = relative;
     }
     else if (_Mode == absolute)
     {
-        path_ = path + wr_;  // NOLINT(bugprone-branch-clone)
-        mode_ = absolute;
+        path_ = path;  // NOLINT(bugprone-branch-clone)
+        path_mode_ = absolute;
     }
     else
         cout << "wrong address::get_address _Mode";
@@ -204,16 +203,21 @@ string address::get_address_str() const
     return path_str_;
 }
 
-string address::get_mode() const
+string address::get_path_mode() const
 {
     string str;
     
-    if(mode_ == relative)
+    if(path_mode_ == relative)
         str = "relative";
-    if(mode_ == absolute)
+    if(path_mode_ == absolute)
         str = "absolute";
     
     return str;
+}
+
+wr_mode address::get_mode() const
+{
+    return wr_mode_;
 }
 
 bool address::try_open() const

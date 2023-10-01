@@ -39,21 +39,18 @@ public:
 
  [[nodiscard]] string get_address() const;
  [[nodiscard]] string get_address_str() const;
- [[nodiscard]] string get_mode() const;
+ [[nodiscard]] string get_path_mode() const;
+ [[nodiscard]] wr_mode get_mode() const;
  [[nodiscard]] bool try_open() const;
 
  address& operator=(const address& right);
     
  static constexpr path_mode relative = static_cast<path_mode>(0);
  static constexpr path_mode absolute = static_cast<path_mode>(1);
- static constexpr wr_mode write = static_cast<wr_mode>(0);
- static constexpr wr_mode read = static_cast<wr_mode>(1);
- static constexpr wr_mode custom = static_cast<wr_mode>(2);
+ static constexpr wr_mode read = static_cast<wr_mode>(0);
+ static constexpr wr_mode write = static_cast<wr_mode>(1);
 private:
- const string write_ = "data_out.csv";
- const string read_ = "data.csv";
- string wr_;
- path_mode mode_;
+ path_mode path_mode_;
  wr_mode wr_mode_;
  string path_;
  string path_str_;

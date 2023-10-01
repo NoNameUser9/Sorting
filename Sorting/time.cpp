@@ -24,8 +24,6 @@ chrono::duration<double, ratio<1, 1>> test(void (*f)(const dualtype&, const int&
     
     for (int i = 0; i < n; ++i)
     {
-        // if(a.is_Str)
-            // a.is_Str_read = true;
         read(a, path);
         t += time(f, a, num, to_low);
     }
