@@ -8,7 +8,7 @@ void read(const dualtype& a, const address& path)
 {
     if(path.get_mode() != address::read)
     {
-        cout << "\nthe file isn't opened!\n";
+        cout << "\nthe file isn't opened to read(mod is not read)!\n";
         return;
     }
     
@@ -18,7 +18,7 @@ void read(const dualtype& a, const address& path)
         fstream fin(path.get_address_str(), fstream::in);
         if(!fin.is_open())
         {
-            cout << "\nthe file isn't opened!\n";
+            cout << "\nthe file isn't opened to read(str)!\n";
             return;
         }
         for(int i = 0; getline(fin, line); ++i)
@@ -30,7 +30,7 @@ void read(const dualtype& a, const address& path)
     fstream fin(path.get_address(), fstream::in);
     if(!fin.is_open())
     {
-        cout << "\nthe file isn't opened!\n";
+        cout << "\nthe file isn't opened(int)!\n";
         return;
     }
     
@@ -49,7 +49,7 @@ void write(const dualtype& a, const address& path, const int num)
 {
     if(path.get_mode() != address::write)
     {
-        cout << "\nthe file isn't opened!\n";
+        cout << "\nthe file isn't opened for write(mode is not write)!\n";
         return;
     }
     
@@ -60,7 +60,7 @@ void write(const dualtype& a, const address& path, const int num)
         // ReSharper disable once IdentifierTypo
         if(!fout_str.is_open())
         {
-            cout << "the file isn't opened!\n";
+            cout << "the file isn't opened(str)!\n";
             return;
         }
         for(int i = 0; i < num; ++i)
@@ -77,7 +77,7 @@ void write(const dualtype& a, const address& path, const int num)
     fstream fout(path.get_address(), fstream::trunc|fstream::out);
     if(!fout.is_open())
     {
-        cout << "the file isn't opened!\n";
+        cout << "the file isn't opened(int)!\n";
         fout.close();
         return;
     }
@@ -225,7 +225,7 @@ bool address::try_open() const
     if(const fstream fin(path_); fin.is_open())
         return true;
 
-    cout << "file isn't opened!\n";
+    cout << "file isn't opened(try_open())!\n";
     return false;
 }
 

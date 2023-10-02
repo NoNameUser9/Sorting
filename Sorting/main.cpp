@@ -3,16 +3,28 @@
 // ReSharper disable StringLiteralTypo
 // ReSharper disable CppClangTidyConcurrencyMtUnsafe
 #define VERSION "v1.3.0"
+// #include <xlnt/xlnt.hpp>
 #include <iostream>
 #include "io.h"
+#include "MSExcel.h"
 #include "time.h"  // NOLINT(modernize-deprecated-headers)
 #include "sort.h"
 #include "struct.h"
+#include "StreamTable.h"
 
 using namespace std;
 
 int main(int argc, char* argv[])
 {
+    StreamTable ST;
+    ExcelLoader exl;
+    const string str = "";
+    exl.LoadExcel(,0);
+    exl.Save();
+    
+    
+    
+    
     constexpr int num = 5000;
     int n = 1; //число итераций time()  // NOLINT(clang-diagnostic-invalid-utf8)
     
@@ -189,8 +201,7 @@ int main(int argc, char* argv[])
                         system("cls");
                         ms.is_Str_read = true;
                         cout << "literal_sort:\n" << test(literal_sort, ms, num, n, path, false) << "\n\n";
-                        address ps(path_out.get_address_str(), path_out.get_mode());                        
-                        write(ms, ps, num);
+                        write(ms, path_out, num);
                         break;
                     }
                 default:

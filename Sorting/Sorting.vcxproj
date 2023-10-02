@@ -17,8 +17,11 @@
     <ClCompile Include="time.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ExcelStream.h" />
     <ClInclude Include="io.h" />
+    <ClInclude Include="MSExcel.h" />
     <ClInclude Include="sort.h" />
+    <ClInclude Include="StreamTable.h" />
     <ClInclude Include="struct.h" />
     <ClInclude Include="time.h" />
   </ItemGroup>
