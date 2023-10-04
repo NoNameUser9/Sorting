@@ -1,16 +1,19 @@
 ﻿#pragma once
 #include <string>
+#include <vector>
+#include <Windows.h>
 #include "struct.h"
-
 class address;
-using namespace std;  // NOLINT(clang-diagnostic-header-hygiene)
+void read_vec(std::vector<std::vector<std::string>>& vec, const address& path);
+void write_vec(std::vector<std::vector<std::string>>& vec, const address& path);
+// using namespace std;  // NOLINT(clang-diagnostic-header-hygiene)
 
 /**
  * \brief read data from file
  * \param a a[] array
  * \param path path to file with data
  */
-void read(const dualtype& a, const address& path);
+// void read(const dualtype& a, const address& path);
 /**
  * \brief write data to file (without _Str)
  * \param a a[] array
@@ -29,17 +32,17 @@ public:
  address();
  // ReSharper disable CppInconsistentNaming
  explicit address(wr_mode WR_mode);
- explicit address(const string& path);
+ explicit address(const std::string& path);
  
- address(const string& path, wr_mode WR_mode);
- address(const string& path, path_mode _Mode, wr_mode WR_mode);  // NOLINT(bugprone-reserved-identifier)
- void set_address(const string& path, path_mode _Mode, wr_mode WR_mode);  // NOLINT(bugprone-reserved-identifier)
- void set_address_str(const string& path);  // NOLINT(bugprone-reserved-identifier)
+ address(const std::string& path, wr_mode WR_mode);
+ address(const std::string& path, path_mode _Mode, wr_mode WR_mode);  // NOLINT(bugprone-reserved-identifier)
+ void set_address(const std::string& path, path_mode _Mode, wr_mode WR_mode);  // NOLINT(bugprone-reserved-identifier)
+ void set_address_str(const std::string& path);  // NOLINT(bugprone-reserved-identifier)
  // ReSharper restore CppInconsistentNaming
 
- [[nodiscard]] string get_address() const;
- [[nodiscard]] string get_address_str() const;
- [[nodiscard]] string get_path_mode() const;
+ [[nodiscard]] std::string get_address() const;
+ [[nodiscard]] std::string get_address_str() const;
+ [[nodiscard]] std::string get_path_mode() const;
  [[nodiscard]] wr_mode get_mode() const;
  [[nodiscard]] bool try_open() const;
 
@@ -52,6 +55,6 @@ public:
 private:
  path_mode path_mode_;
  wr_mode wr_mode_;
- string path_;
- string path_str_;
+ std::string path_;
+ std::string path_str_;
 };

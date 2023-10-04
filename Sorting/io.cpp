@@ -1,24 +1,106 @@
-﻿#include "io.h"
+﻿// #pragma comment(lib, "<C:\Users\User\Documents\new\lib\ExcelFormat.lib>")
+#include "io.h"
 #include <fstream>
 #include <iostream>
+#include <locale>
 #include <sstream>
+#include <vector>
 
 // ReSharper disable once CppCompileTimeConstantCanBeReplacedWithBooleanConstant
-void read(const dualtype& a, const address& path)
+void read_vec(std::vector<std::vector<std::string>>& vec, const address& path)
 {
+    std::setlocale(LC_ALL, "");
+
     if(path.get_mode() != address::read)
     {
-        cout << "\nthe file isn't opened to read(mod is not read)!\n";
+        std::cout << "\nthe file isn't opened to read(mod is not read)!\n";
         return;
     }
     
-    string line;
+    std::string line; 
+    std::fstream fin((path.get_address_str()), std::fstream::in);
+    if(!fin.is_open())
+    {
+        std::cout << "\nthe file isn't opened to read(str)!\n";
+        return;
+    }
+        
+    for(int i = 0; getline(fin, line); ++i)
+    {
+        vec.resize(i+1);
+        int j = 0, jj = 0;
+        for(auto itl = line.begin(); itl != line.end(); ++j, ++jj, ++itl)
+        {
+            std::string ts;
+            for(auto ii = 0; itl != line.end() && line.at(jj) != ';'; ++ii)
+            {
+                ts += line[jj];
+                if(itl != line.end())
+                    ++jj, ++itl;
+            }
+                    
+            vec[i].resize(j+1);
+            vec[i][j] = ts;
+            if(itl == line.end())
+               --jj, --itl;
+        }
+    }
+    fin.close();
+}
+
+void write_vec(std::vector<std::vector<std::string>>& vec, const address& path)
+{
+    if(path.get_mode() != address::write)
+    {
+        std::cout << "\nthe file isn't opened for write(mode is not write)!\n";
+        return;
+    }
+    
+    // ReSharper disable once IdentifierTypo
+    
+    std::fstream fout_str(path.get_address(), std::fstream::trunc|std::fstream::out);
+    // ReSharper disable once IdentifierTypo
+    if(!fout_str.is_open())
+    {
+        std::cout << "the file isn't opened(str)!\n";
+        return;
+    }
+    for(int i = 0; i < vec.size(); ++i)
+    {
+        std::string str;
+        int a = vec.size();
+        for(int j = 0; j < vec[i].size(); ++j)
+        {
+            if(vec[i].size()-1 == j)
+                str += vec[i][j] + '\n';
+            else
+                str += vec[i][j] + ';';
+        }
+        // str += '\n';
+        fout_str.write(str.c_str(), static_cast<std::streamsize>(str.size()));
+    }
+    fout_str.close();
+    // vec.is_Str_read = false;
+    // return;
+}
+
+void read(const dualtype& a, const address& path)
+{
+    std::setlocale(LC_ALL, "");
+
+    if(path.get_mode() != address::read)
+    {
+        std::cout << "\nthe file isn't opened to read(mod is not read)!\n";
+        return;
+    }
+    
+    std::string line;    
     if(a.is_Str_read)
     {
-        fstream fin(path.get_address_str(), fstream::in);
+        std::fstream fin((path.get_address_str()), std::fstream::in);
         if(!fin.is_open())
         {
-            cout << "\nthe file isn't opened to read(str)!\n";
+            std::cout << "\nthe file isn't opened to read(str)!\n";
             return;
         }
         for(int i = 0; getline(fin, line); ++i)
@@ -27,14 +109,14 @@ void read(const dualtype& a, const address& path)
         return;
     }
     
-    fstream fin(path.get_address(), fstream::in);
+    std::fstream fin(path.get_address(), std::fstream::in);
     if(!fin.is_open())
     {
-        cout << "\nthe file isn't opened(int)!\n";
+        std::cout << "\nthe file isn't opened(int)!\n";
         return;
     }
-    
-    stringstream ss;
+
+    std::stringstream ss;
     for(int i = 0; getline(fin, line); ++i)
     {
         ss.clear();
@@ -49,24 +131,24 @@ void write(const dualtype& a, const address& path, const int num)
 {
     if(path.get_mode() != address::write)
     {
-        cout << "\nthe file isn't opened for write(mode is not write)!\n";
+        std::cout << "\nthe file isn't opened for write(mode is not write)!\n";
         return;
     }
     
     // ReSharper disable once IdentifierTypo
     if(a.is_Str_read == true)
     {
-        fstream fout_str(path.get_address_str(), fstream::trunc|fstream::out);
+        std::fstream fout_str(path.get_address_str(), std::fstream::trunc|std::fstream::out);
         // ReSharper disable once IdentifierTypo
         if(!fout_str.is_open())
         {
-            cout << "the file isn't opened(str)!\n";
+            std::cout << "the file isn't opened(str)!\n";
             return;
         }
         for(int i = 0; i < num; ++i)
         {
-            string str = a.Str[i] + '\n';
-            fout_str.write(str.c_str(), static_cast<streamsize>(str.size()));
+            std::string str = a.Str[i] + '\n';
+            fout_str.write(str.c_str(), static_cast<std::streamsize>(str.size()));
         }
         fout_str.close();
         a.is_Str_read = false;
@@ -74,18 +156,18 @@ void write(const dualtype& a, const address& path, const int num)
     }
     
     // ReSharper disable once IdentifierTypo
-    fstream fout(path.get_address(), fstream::trunc|fstream::out);
+    std::fstream fout(path.get_address(), std::fstream::trunc|std::fstream::out);
     if(!fout.is_open())
     {
-        cout << "the file isn't opened(int)!\n";
+        std::cout << "the file isn't opened(int)!\n";
         fout.close();
         return;
     }
     
     for(int i = 0; i < num; ++i)
     {
-        string str = to_string(a.Int[i]) + '\n';
-        fout.write(str.c_str(), static_cast<streamsize>(str.size()));
+        std::string str = std::to_string(a.Int[i]) + '\n';
+        fout.write(str.c_str(), static_cast<std::streamsize>(str.size()));
     }
     
     fout.close();
@@ -95,15 +177,15 @@ void print(const dualtype& a, const int num)
 {
     if(a.is_Str_read == false)
         for(int i = 0; i < num; i++)
-            cout << a.Int[i] << " ";
+            std::cout << a.Int[i] << " ";
     else
     {
         for(int i = 0; i < num; i++)
-            cout << a.Str[i] << " ";
+            std::cout << a.Str[i] << " ";
         a.is_Str_read = false;
     }
     
-    cout << endl;
+    std::cout << std::endl;
 }
 
 // ReSharper disable once CppPossiblyUninitializedMember
@@ -133,7 +215,7 @@ address::address(const wr_mode WR_mode = write|read)
 
 // ReSharper disable once CppPossiblyUninitializedMember
 // ReSharper disable once CppInconsistentNaming
-address::address(const string& path, const wr_mode WR_mode = write|read)  // NOLINT(cppcoreguidelines-pro-type-member-init)
+address::address(const std::string& path, const wr_mode WR_mode = write|read)  // NOLINT(cppcoreguidelines-pro-type-member-init)
 {
     if(WR_mode == write)
     {
@@ -150,14 +232,14 @@ address::address(const string& path, const wr_mode WR_mode = write|read)  // NOL
 }
 
 // ReSharper disable CppInconsistentNaming
-address::address(const string& path, const path_mode _Mode = relative|absolute, const wr_mode WR_mode = write|read)  // NOLINT(cppcoreguidelines-pro-type-member-init, clang-diagnostic-reserved-identifier, bugprone-reserved-identifier)
+address::address(const std::string& path, const path_mode _Mode = relative|absolute, const wr_mode WR_mode = write|read)  // NOLINT(cppcoreguidelines-pro-type-member-init, clang-diagnostic-reserved-identifier, bugprone-reserved-identifier)
 // ReSharper restore CppInconsistentNaming
 {
     set_address(path, _Mode, WR_mode);
 }
 
 // ReSharper disable once CppPossiblyUninitializedMember
-address::address(const string& path)  // NOLINT(cppcoreguidelines-pro-type-member-init)
+address::address(const std::string& path)  // NOLINT(cppcoreguidelines-pro-type-member-init)
 {
     wr_mode_ = read;
     path_ = path;
@@ -166,7 +248,7 @@ address::address(const string& path)  // NOLINT(cppcoreguidelines-pro-type-membe
 
 // ReSharper disable CppInconsistentNaming
 // ReSharper disable once CppCompileTimeConstantCanBeReplacedWithBooleanConstant
-void address::set_address(const string& path, const path_mode _Mode = relative|absolute, const wr_mode WR_mode = write|read)  // NOLINT(clang-diagnostic-reserved-identifier, bugprone-reserved-identifier)
+void address::set_address(const std::string& path, const path_mode _Mode = relative|absolute, const wr_mode WR_mode = write|read)  // NOLINT(clang-diagnostic-reserved-identifier, bugprone-reserved-identifier)
 // ReSharper restore CppInconsistentNaming
 {
     if(WR_mode == write)
@@ -185,27 +267,27 @@ void address::set_address(const string& path, const path_mode _Mode = relative|a
         path_mode_ = absolute;
     }
     else
-        cout << "wrong address::get_address _Mode";
+        std::cout << "wrong address::get_address _Mode";
 }
 
-void address::set_address_str(const string& path)
+void address::set_address_str(const std::string& path)
 {
     path_str_ = path;
 }
 
-string address::get_address() const
+std::string address::get_address() const
 {
     return path_;
 }
 
-string address::get_address_str() const
+std::string address::get_address_str() const
 {
     return path_str_;
 }
 
-string address::get_path_mode() const
+std::string address::get_path_mode() const
 {
-    string str;
+    std::string str;
     
     if(path_mode_ == relative)
         str = "relative";
@@ -222,10 +304,10 @@ wr_mode address::get_mode() const
 
 bool address::try_open() const
 {
-    if(const fstream fin(path_); fin.is_open())
+    if(const std::fstream fin(path_); fin.is_open())
         return true;
 
-    cout << "file isn't opened(try_open())!\n";
+    std::cout << "file isn't opened(try_open())!\n";
     return false;
 }
 

@@ -5,29 +5,29 @@
 void tolow(const dualtype& a, const int& num)
 {
     auto* temp = new int[num];
-    for(int i = 0; i < num; ++i)
+    for(int i = 1; i < num; ++i)
         temp[num - i-1] = a.Int[i];
-    for(int i = 0; i < num; ++i)
+    for(int i = 1; i < num; ++i)
         a.Int[i] = temp[i];
 
     if(a.is_Str_read)
     {
         auto* temp_str = new std::string[num];
-        for(int i = 0; i < num; ++i)
+        for(int i = 1; i < num; ++i)
             temp_str[num - i-1] = a.Str[i];
-        for(int i = 0; i < num; ++i)
+        for(int i = 1; i < num; ++i)
             a.Str[i] = temp_str[i];
     }
 }
 
-void bubble_sort(const dualtype& a, const int& num, const bool& to_low)
+void bubble_sort(const dualtype& a, const bool& to_low)
 {
     bool swapped = false;
-    auto num_t = num;
+    auto num_t = a.Int.size();
     
     while (true)
     {
-        for(int i = 0; i < num_t - 1; ++i)
+        for(int i = 1; i < num_t - 1; ++i)
         {
             if(a.Int[i] > a.Int[i+1])
             {
@@ -42,15 +42,15 @@ void bubble_sort(const dualtype& a, const int& num, const bool& to_low)
     }
     
     if(to_low == true)
-        tolow(a, num);
+        tolow(a, a.Int.size());
 }
 
-void selection_sort(const dualtype& a, const int& num, const bool& to_low)
+void selection_sort(const dualtype& a, const bool& to_low)
 {
     int index = 0;
-    for(int i = 0; i < num - 1; ++i)
+    for(int i = 1; i < a.Int.size() - 1; ++i)
     {
-        for(int i1 = i; i1 < num; ++i1)
+        for(int i1 = i; i1 < a.Int.size(); ++i1)
         {
             if(a.Int[i1] < a.Int[index])
                 index = i1;
@@ -59,12 +59,12 @@ void selection_sort(const dualtype& a, const int& num, const bool& to_low)
     }
     
     if(to_low == true)
-        tolow(a, num);
+        tolow(a, a.Int.size());
 }
 
-void insertion_sort(const dualtype& a, const int& num, const bool& to_low)
+void insertion_sort(const dualtype& a, const bool& to_low)
 {
-    for(int i = 1; i < num; ++i)
+    for(int i = 1; i < a.Int.size(); ++i)
     {
         for(int i1 = i; i1 > 0; --i1)
         {
@@ -74,7 +74,7 @@ void insertion_sort(const dualtype& a, const int& num, const bool& to_low)
     }
     
     if(to_low == true)
-        tolow(a, num);
+        tolow(a, a.Int.size());
 }
 
 /**
@@ -118,12 +118,12 @@ void q_sort_r(const dualtype& a, const int& start, const int end)
     }
 }
 
-void q_sort(const dualtype& a, const int& num, const bool& to_low)
+void q_sort(const dualtype& a, const bool& to_low)
 {
-    q_sort_r(a, 0, num-1);
+    q_sort_r(a, 1, a.Int.size()-1);
     
     if(to_low == true)
-        tolow(a, num);
+        tolow(a, a.Int.size());
 }
 
 void merge_sort_r(int* a, const int num)
@@ -146,23 +146,23 @@ void merge_sort_r(int* a, const int num)
 }
 
 
-void merge_sort(const dualtype& a, const int& num, const bool& to_low)
+void merge_sort(const dualtype& a, const bool& to_low)
 {
-    merge_sort_r(a.Int, num);
+    // merge_sort_r(a.Int);
     if(to_low == true)
-        tolow(a, num);
+        tolow(a, a.Int.size());
 }
 
-void shell_sort(const dualtype& a, const int& num, const bool& to_low)
+void shell_sort(const dualtype& a, const bool& to_low)
 {
-    double range = num;
     if(a.is_Str_read == true)
     {
+    double range = a.Str.size();
         while(true)
         {
             constexpr double factor = 1.2473309;
             
-            for(int i = 0, j = static_cast<int>(range)-1; j-i >= 1 && j < num; ++i, ++j)
+            for(int i = 1, j = static_cast<int>(range)-1; j-i >= 1 && j < a.Str.size(); ++i, ++j)
             {
                 if(a.Str[i] > a.Str[j])
                     swap(a.Str[i], a.Str[j]);
@@ -176,11 +176,12 @@ void shell_sort(const dualtype& a, const int& num, const bool& to_low)
     }
     else
     {
+        double range = a.Int.size();
         while(true)
         {
             constexpr double factor = 1.2473309;
             
-            for(int i = 0, j = static_cast<int>(range)-1; j-i >= 1 && j < num; ++i, ++j)
+            for(int i = 1, j = static_cast<int>(range)-1; j-i >= 1 && j < a.Int.size(); ++i, ++j)
             {
                 if(a.Int[i] > a.Int[j])
                     swap(a.Int[i], a.Int[j]);
@@ -194,7 +195,7 @@ void shell_sort(const dualtype& a, const int& num, const bool& to_low)
     }
     
     if(to_low == true)
-        tolow(a, num);
+        tolow(a, a.Int.size());
 }
 
 // ReSharper disable once IdentifierTypo
@@ -221,24 +222,24 @@ void heapify(const dualtype& a, const int n, const int i)
     }
 }
 
-void heap_sort(const dualtype& a, const int& num, const bool& to_low)
+void heap_sort(const dualtype& a, const bool& to_low)
 {
-    for(int i = num/2 - 1; i >= 0; --i)
-        heapify(a, num, i);
+    for(int i = a.Int.size()/2 - 1; i > 0; --i)
+        heapify(a, a.Int.size(), i);
 
-    for(int i = num-1; i>= 0; --i)
+    for(int i = a.Int.size()-1; i> 0; --i)
     {
         swap(a.Int[0], a.Int[i]);
         heapify(a, i, 0);
     }
     
     if(to_low == true)
-        tolow(a, num);
+        tolow(a, a.Int.size());
 }
 
-void literal_sort(const dualtype& a, const int& num, const bool& to_low)
+void literal_sort(const dualtype& a, const bool& to_low)
 {
     // ReSharper disable once CommentTypo
-    shell_sort(a, num, to_low);  // NOLINT(clang-diagnostic-cast-qual, clang-diagnostic-cast-align, performance-no-int-to-ptr, clang-diagnostic-int-to-pointer-cast)
+    shell_sort(a, to_low);  // NOLINT(clang-diagnostic-cast-qual, clang-diagnostic-cast-align, performance-no-int-to-ptr, clang-diagnostic-int-to-pointer-cast)
     a.is_Str = true;
 }

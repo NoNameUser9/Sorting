@@ -2,28 +2,38 @@
 // ReSharper disable CppClangTidyModernizeRawStringLiteral
 // ReSharper disable StringLiteralTypo
 // ReSharper disable CppClangTidyConcurrencyMtUnsafe
-#define VERSION "v1.3.0"
-// #include <xlnt/xlnt.hpp>
+#define VERSION "v1.4.0"
 #include <iostream>
 #include "io.h"
-#include "MSExcel.h"
 #include "time.h"  // NOLINT(modernize-deprecated-headers)
 #include "sort.h"
 #include "struct.h"
-#include "StreamTable.h"
 
 using namespace std;
 
 int main(int argc, char* argv[])
 {
-    StreamTable ST;
-    ExcelLoader exl;
-    const string str = "";
-    exl.LoadExcel(,0);
-    exl.Save();
-    
-    
-    
+setlocale(LC_ALL, "Russian");
+    // const string str = "";
+    vector<vector<std::string>> vec_str{};
+    dualtype dt{};
+    // vector<int> ti{};
+    // vector<string> ts{};
+    const string ps = "C:\\Users\\User\\Documents\\Sort.csv";
+    const string ps_out = "C:\\Users\\User\\Documents\\Sort_out.csv";
+    address pa(ps);
+    address pa_out(ps_out, address::write);
+    pa.set_address_str(ps);
+    // dt.Int = ti;
+    // dt.Str = ts;
+    dt.is_Str_read = true;
+    read_vec(vec_str, pa);
+    test(shell_sort,dt,1,pa,false);
+    for(int i = 0; i < vec_str.size(); ++i)
+        vec_str[i][0] = dt.Str[i];
+    // read(dt, pa);
+    dt.is_Str_read = false;
+    write_vec(vec_str, pa_out);
     
     constexpr int num = 5000;
     int n = 1; //число итераций time()  // NOLINT(clang-diagnostic-invalid-utf8)
@@ -31,8 +41,8 @@ int main(int argc, char* argv[])
     int a[num]{};
     string a_s[num]{};
     dualtype ms{};
-    ms.Int = a;
-    ms.Str = a_s;
+    // ms.Int = a;
+    // ms.Str = a_s;
     
     address path("C:\\Users\\User\\Documents\\data.csv"),
     path_out("C:\\Users\\User\\Documents\\data_out.csv", address::write);
@@ -123,7 +133,7 @@ int main(int argc, char* argv[])
             {
                 system("cls");
                 cout << "full test of sorting\n\n";
-                full_test(ms, num, n, path, false);
+                full_test(ms, n, path, false);
                 ms.is_Str_read = true;
                 write(ms, path_out, num);
                 write(ms, path_out, num);
@@ -149,28 +159,28 @@ int main(int argc, char* argv[])
                 case 1:
                     {
                         system("cls");
-                        cout << "bubble_sort:\n" << test(bubble_sort, ms, num, n, path, false) << "\n\n";
+                        cout << "bubble_sort:\n" << test(bubble_sort, ms, n, path, false) << "\n\n";
                         write(ms, path_out, num);
                         break;
                     }
                 case 2:
                     {
                         system("cls");
-                        cout << "selection_sort:\n" << test(selection_sort, ms, num, n, path, false) << "\n\n";
+                        cout << "selection_sort:\n" << test(selection_sort, ms, n, path, false) << "\n\n";
                         write(ms, path_out, num);
                         break;
                     }
                 case 3:
                     {
                         system("cls");
-                        cout << "insertion_sort:\n" << test(insertion_sort, ms, num, n, path, false) << "\n\n";
+                        cout << "insertion_sort:\n" << test(insertion_sort, ms, n, path, false) << "\n\n";
                         write(ms, path_out, num);
                         break;
                     }
                 case 4:
                     {
                         system("cls");
-                        cout << "q_sort:\n" << test(q_sort, ms, num, n, path, false) << "\n\n";
+                        cout << "q_sort:\n" << test(q_sort, ms, n, path, false) << "\n\n";
                         write(ms, path_out, num);
                         break;
                     }
@@ -178,21 +188,21 @@ int main(int argc, char* argv[])
                     {
                         system("cls");
                         cout << "it's not work yet!\n";
-                        cout << "merge_sort:\n" << test(merge_sort, ms, num, n, path, false) << "\n\n";
+                        cout << "merge_sort:\n" << test(merge_sort, ms, n, path, false) << "\n\n";
                         write(ms, path_out, num);
                         break;
                     }
                 case 6:
                     {
                         system("cls");
-                        cout << "shell_sort:\n" << test(shell_sort, ms, num, n, path, false) << "\n\n";
+                        cout << "shell_sort:\n" << test(shell_sort, ms, n, path, false) << "\n\n";
                         write(ms, path_out, num);
                         break;
                     }
                 case 7:
                     {
                         system("cls");
-                        cout << "heap_sort:\n" << test(heap_sort, ms, num, n, path, false) << "\n\n";
+                        cout << "heap_sort:\n" << test(heap_sort, ms, n, path, false) << "\n\n";
                         write(ms, path_out, num);
                         break;
                     }
@@ -200,7 +210,7 @@ int main(int argc, char* argv[])
                     {
                         system("cls");
                         ms.is_Str_read = true;
-                        cout << "literal_sort:\n" << test(literal_sort, ms, num, n, path, false) << "\n\n";
+                        cout << "literal_sort:\n" << test(literal_sort, ms, n, path, false) << "\n\n";
                         write(ms, path_out, num);
                         break;
                     }
