@@ -2,36 +2,36 @@
 #include "struct.h"
 
 // ReSharper disable once IdentifierTypo
-void tolow(const dualtype& a, const int& num)
+void tolow(dualtype& a, const uint64_t& num)
 {
-    auto* temp = new int[num];
-    for(int i = 1; i < num; ++i)
-        temp[num - i-1] = a.Int[i];
-    for(int i = 1; i < num; ++i)
-        a.Int[i] = temp[i];
-
-    if(a.is_Str_read)
-    {
-        auto* temp_str = new std::string[num];
-        for(int i = 1; i < num; ++i)
-            temp_str[num - i-1] = a.Str[i];
-        for(int i = 1; i < num; ++i)
-            a.Str[i] = temp_str[i];
-    }
+    auto* temp = new std::vector<std::string>[num];
+    for(uint64_t i = 1; i < num; ++i)
+        temp[num - i-1] = a.Table[i];
+    for(uint64_t i = 1; i < num; ++i)
+        a.Table[i] = temp[i];
+    //
+    // if(a.is_Str_read)
+    // {
+    //     auto* temp_str = new std::string[num];
+    //     for(int i = 1; i < num; ++i)
+    //         temp_str[num - i-1] = a.Table[i];
+    //     for(int i = 1; i < num; ++i)
+    //         a.Table[i] = temp_str[i];
+    // }
 }
 
-void bubble_sort(const dualtype& a, const bool& to_low)
+void bubble_sort(dualtype& a, const uint64_t& col, const bool& to_low)
 {
     bool swapped = false;
-    auto num_t = a.Int.size();
+    auto num_t = a.Table.size();
     
     while (true)
     {
-        for(int i = 1; i < num_t - 1; ++i)
+        for(uint64_t i = 1; i < num_t - 1; ++i)
         {
-            if(a.Int[i] > a.Int[i+1])
+            if(a.Table[i][col] > a.Table[i+1][col])
             {
-                swap(a.Int[i], a.Int[i+1]);
+                swap(a.Table[i], a.Table[i+1]);
                 swapped = true;
             }
         }
@@ -42,39 +42,39 @@ void bubble_sort(const dualtype& a, const bool& to_low)
     }
     
     if(to_low == true)
-        tolow(a, a.Int.size());
+        tolow(a, a.Table.size());
 }
 
-void selection_sort(const dualtype& a, const bool& to_low)
+void selection_sort(dualtype& a, const uint64_t& col, const bool& to_low)
 {
-    int index = 0;
-    for(int i = 1; i < a.Int.size() - 1; ++i)
+    uint64_t index = 0;
+    for(uint64_t i = 1; i < a.Table.size() - 1; ++i)
     {
-        for(int i1 = i; i1 < a.Int.size(); ++i1)
+        for(uint64_t i1 = i; i1 < a.Table.size(); ++i1)
         {
-            if(a.Int[i1] < a.Int[index])
+            if(a.Table[i1][col] < a.Table[index][col])
                 index = i1;
         }
-        swap(a.Int[i], a.Int[index]);
+        swap(a.Table[i], a.Table[index]);
     }
     
     if(to_low == true)
-        tolow(a, a.Int.size());
+        tolow(a, a.Table.size());
 }
 
-void insertion_sort(const dualtype& a, const bool& to_low)
+void insertion_sort(dualtype& a, const uint64_t& col, const bool& to_low)
 {
-    for(int i = 1; i < a.Int.size(); ++i)
+    for(uint64_t i = 1; i < a.Table.size(); ++i)
     {
-        for(int i1 = i; i1 > 0; --i1)
+        for(uint64_t i1 = i; i1 > 0; --i1)
         {
-            if(a.Int[i1] < a.Int[i1-1])
-                swap(a.Int[i1], a.Int[i1-1]);
+            if(a.Table[i1][col] < a.Table[i1-1][col])
+                swap(a.Table[i1], a.Table[i1-1]);
         }
     }
     
     if(to_low == true)
-        tolow(a, a.Int.size());
+        tolow(a, a.Table.size());
 }
 
 /**
@@ -82,23 +82,24 @@ void insertion_sort(const dualtype& a, const bool& to_low)
  * \param a a[] array
  * \param start begins from a[start]
  * \param pivot a[pivot] is a pivot of a[] array
+ * \param col is column of a.Table
  * \return pivot point sorted piece of a[] array
  */
-int partition(const dualtype& a, const int& start, int pivot)
+uint64_t partition(dualtype& a, const uint64_t& start, uint64_t pivot, const uint64_t& col)
 {
-    int i = start;
+    uint64_t i = start;
     while(i < pivot)
     {
-        if(a.Int[i] > a.Int[pivot] && i == pivot-1)
+        if(a.Table[i][col] > a.Table[pivot][col] && i == pivot-1)
         {
-            swap(a.Int[i], a.Int[pivot]);
+            swap(a.Table[i], a.Table[pivot]);
             pivot--;
         }
 		
-        else if(a.Int[i] > a.Int[pivot])
+        else if(a.Table[i][col] > a.Table[pivot][col])
         {
-            swap(a.Int[pivot - 1], a.Int[pivot]);
-            swap(a.Int[i], a.Int[pivot]);
+            swap(a.Table[pivot - 1], a.Table[pivot]);
+            swap(a.Table[i], a.Table[pivot]);
             pivot--;
         }
 		
@@ -107,68 +108,70 @@ int partition(const dualtype& a, const int& start, int pivot)
     return pivot;
 }
 
-void q_sort_r(const dualtype& a, const int& start, const int end)
+void q_sort_r(dualtype& a, const uint64_t& start, const uint64_t end, const uint64_t& col)
 {
     if(start < end)
     {
-        const int pivot = partition(a, start, end);
+        const uint64_t pivot = partition(a, start, end, col);
 		
-        q_sort_r(a, start, pivot - 1);
-        q_sort_r(a, pivot + 1, end);
+        q_sort_r(a, start, pivot - 1, col);
+        q_sort_r(a, pivot + 1, end, col);
     }
 }
 
-void q_sort(const dualtype& a, const bool& to_low)
+void q_sort(dualtype& a, const uint64_t& col, const bool& to_low)
 {
-    q_sort_r(a, 1, a.Int.size()-1);
+    q_sort_r(a, 1, a.Table.size()-1, col);
     
     if(to_low == true)
-        tolow(a, a.Int.size());
+        tolow(a, a.Table.size());
 }
 
-void merge_sort_r(int* a, const int num)
-{
-    if (num < 2)return;
-    merge_sort_r(a, num / 2);
-    merge_sort_r(&a[num / 2], num - (num / 2));
-    const auto buf = new int[num];
-    // ReSharper disable once IdentifierTypo
-    int idbuf = 0, idl = 0, idr = num / 2 ;
-    while ((idl < num / 2) && (idr < num))
-        if (a[idl] < a[idr]) 
-            buf[idbuf++] = a[idl++];
-        else
-            buf[idbuf++] = a[idr++];
-    while (idl < num / 2) buf[idbuf++] = a[idl++];
-    while (idr < num) buf[idbuf++] = a[idr++];
-    for (idl = 0; idl < num; idl++)a[idl] = buf[idl];
-    delete[]buf;
-}
+// ReSharper disable CommentTypo
+// void merge_sort_r(dualtype& a, const int num)
+// {
+//     if (num < 2)return;
+//     merge_sort_r(a, num / 2);
+//     merge_sort_r(&a[num / 2], num - (num / 2));
+//     const auto buf = new int[num];
+//     // ReSharper disable once IdentifierTypo
+//     int idbuf = 0, idl = 0, idr = num / 2 ;
+//     while ((idl < num / 2) && (idr < num))
+//         if (a[idl] < a[idr]) 
+//             buf[idbuf++] = a[idl++];
+//         else
+//             buf[idbuf++] = a[idr++];
+//     while (idl < num / 2) buf[idbuf++] = a[idl++];
+//     while (idr < num) buf[idbuf++] = a[idr++];
+//     for (idl = 0; idl < num; idl++)a[idl] = buf[idl];
+//     delete[]buf;
+// }
+// ReSharper restore CommentTypo
 
 
-void merge_sort(const dualtype& a, const bool& to_low)
+void merge_sort(dualtype& a, const uint64_t& col, const bool& to_low)
 {
-    // merge_sort_r(a.Int);
+    // merge_sort_r(a, col);
     if(to_low == true)
-        tolow(a, a.Int.size());
+        tolow(a, a.Table.size());
 }
 
-void shell_sort(const dualtype& a, const bool& to_low)
+void shell_sort(dualtype& a, const uint64_t& col, const bool& to_low)
 {
     if(a.is_Str_read == true)
     {
-    double range = a.Str.size();
+        auto range = static_cast<double>(a.Table.size());
         while(true)
         {
             constexpr double factor = 1.2473309;
             
-            for(int i = 1, j = static_cast<int>(range)-1; j-i >= 1 && j < a.Str.size(); ++i, ++j)
+            for(uint64_t i = 1, j = static_cast<uint64_t>(range)-1; j-i >= 1 && j < a.Table.size() && j > i; ++i, ++j)
             {
-                if(a.Str[i] > a.Str[j])
-                    swap(a.Str[i], a.Str[j]);
+                if(a.Table[i][col] > a.Table[j][col])
+                    swap(a.Table[i], a.Table[j]);
             }
-            
-            if(range <= 1)
+
+            if(range <= 2)
                 break;
             
             range /= factor;
@@ -176,26 +179,26 @@ void shell_sort(const dualtype& a, const bool& to_low)
     }
     else
     {
-        double range = a.Int.size();
+        auto range = static_cast<double>(a.Table.size());
         while(true)
         {
             constexpr double factor = 1.2473309;
             
-            for(int i = 1, j = static_cast<int>(range)-1; j-i >= 1 && j < a.Int.size(); ++i, ++j)
+            for(uint64_t i = 1, j = static_cast<uint64_t>(range)-1; j-i >= 1 && j < a.Table.size() && j > i; ++i, ++j)
             {
-                if(a.Int[i] > a.Int[j])
-                    swap(a.Int[i], a.Int[j]);
+                if(stoi(a.Table[i][col]) > stoi(a.Table[j][col]))
+                    swap(a.Table[i], a.Table[j]);
             }
-            
-            if(range <= 1)
-            break;
+
+            if(range <= 2)
+                break;
             
             range /= factor;
         }
     }
     
     if(to_low == true)
-        tolow(a, a.Int.size());
+        tolow(a, a.Table.size());
 }
 
 // ReSharper disable once IdentifierTypo
@@ -205,41 +208,43 @@ void shell_sort(const dualtype& a, const bool& to_low)
  * \param n number of array elements
  * \param i largest element of array
  */
-void heapify(const dualtype& a, const int n, const int i)
+void heapify(dualtype& a, const uint64_t n, const uint64_t i)
 {
-    int largest = i;
+    uint64_t largest = i;
     
-    if(const int l = 2*i + 1; l < n && a.Int[l] > a.Int[largest])
+    if(const uint64_t l = 2*i + 1; l < n && a.Table[l] > a.Table[largest])
         largest = l;
     
-    if(const int r = 2*i + 2; r < n && a.Int[r] > a.Int[largest])
+    if(const uint64_t r = 2*i + 2; r < n && a.Table[r] > a.Table[largest])
         largest = r;
 
     if(largest != i)
     {
-        swap(a.Int[largest], a.Int[i]);
+        swap(a.Table[largest], a.Table[i]);
         heapify(a, n, largest);
     }
 }
 
-void heap_sort(const dualtype& a, const bool& to_low)
+void heap_sort(dualtype& a, const uint64_t& col, const bool& to_low)
 {
-    for(int i = a.Int.size()/2 - 1; i > 0; --i)
-        heapify(a, a.Int.size(), i);
+    for(uint64_t i = a.Table.size()/2 - 1; i > 0; --i)
+        heapify(a, a.Table.size(), i);
 
-    for(int i = a.Int.size()-1; i> 0; --i)
+    for(uint64_t i = a.Table.size()-1; i> 0; --i)
     {
-        swap(a.Int[0], a.Int[i]);
+        swap(a.Table[0], a.Table[i]);
         heapify(a, i, 0);
     }
     
     if(to_low == true)
-        tolow(a, a.Int.size());
+        tolow(a, a.Table.size());
 }
 
-void literal_sort(const dualtype& a, const bool& to_low)
+void literal_sort(dualtype& a, const uint64_t& col, const bool& to_low)
 {
+    a.is_Str_read = true;
     // ReSharper disable once CommentTypo
-    shell_sort(a, to_low);  // NOLINT(clang-diagnostic-cast-qual, clang-diagnostic-cast-align, performance-no-int-to-ptr, clang-diagnostic-int-to-pointer-cast)
+    shell_sort(a, col, to_low);  // NOLINT(clang-diagnostic-cast-qual, clang-diagnostic-cast-align, performance-no-int-to-ptr, clang-diagnostic-int-to-pointer-cast)
+    a.is_Str_read = false;
     a.is_Str = true;
 }

@@ -1,27 +1,18 @@
 ﻿#pragma once
 #include <string>
-#include <vector>
+// #include <vector>
 #include <Windows.h>
 #include "struct.h"
 class address;
-void read_vec(std::vector<std::vector<std::string>>& vec, const address& path);
-void write_vec(std::vector<std::vector<std::string>>& vec, const address& path);
+void read_vec(dualtype& vec, const address& path);
+void write_vec(const dualtype& vec, const address& path);
 // using namespace std;  // NOLINT(clang-diagnostic-header-hygiene)
 
 /**
- * \brief read data from file
  * \param a a[] array
- * \param path path to file with data
+ * \param col is column of sort
  */
-// void read(const dualtype& a, const address& path);
-/**
- * \brief write data to file (without _Str)
- * \param a a[] array
- * \param path path to file with data
- * \param num size of array
- */
-void write(const dualtype& a, const address& path, int num);
-void print(const dualtype* a, int num);
+void print(const dualtype* a, uint64_t& col);
 
 /**
  * \brief type of data which contains address of file with data

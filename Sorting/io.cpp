@@ -7,9 +7,10 @@
 #include <vector>
 
 // ReSharper disable once CppCompileTimeConstantCanBeReplacedWithBooleanConstant
-void read_vec(std::vector<std::vector<std::string>>& vec, const address& path)
+void read_vec(dualtype& vec, const address& path)
 {
-    std::setlocale(LC_ALL, "");
+    // ReSharper disable CommentTypo
+    // std::setlocale(LC_ALL, "");
 
     if(path.get_mode() != address::read)
     {
@@ -18,7 +19,7 @@ void read_vec(std::vector<std::vector<std::string>>& vec, const address& path)
     }
     
     std::string line; 
-    std::fstream fin((path.get_address_str()), std::fstream::in);
+    std::fstream fin((path.get_address()), std::fstream::in);
     if(!fin.is_open())
     {
         std::cout << "\nthe file isn't opened to read(str)!\n";
@@ -27,28 +28,26 @@ void read_vec(std::vector<std::vector<std::string>>& vec, const address& path)
         
     for(int i = 0; getline(fin, line); ++i)
     {
-        vec.resize(i+1);
+        vec.Table.resize(i+1);
         int j = 0, jj = 0;
         for(auto itl = line.begin(); itl != line.end(); ++j, ++jj, ++itl)
         {
             std::string ts;
-            for(auto ii = 0; itl != line.end() && line.at(jj) != ';'; ++ii)
-            {
+            for(auto ii = 0; !(itl == line.end() || line.at(jj) == ';'); ++ii, ++jj, ++itl)
                 ts += line[jj];
-                if(itl != line.end())
-                    ++jj, ++itl;
-            }
                     
-            vec[i].resize(j+1);
-            vec[i][j] = ts;
+            vec.Table[i].resize(j+1);
+            vec.Table[i][j] = ts;
             if(itl == line.end())
-               --jj, --itl;
+            {
+                --jj; --itl;
+            }
         }
     }
     fin.close();
 }
 
-void write_vec(std::vector<std::vector<std::string>>& vec, const address& path)
+void write_vec(const dualtype& vec, const address& path)
 {
     if(path.get_mode() != address::write)
     {
@@ -57,7 +56,6 @@ void write_vec(std::vector<std::vector<std::string>>& vec, const address& path)
     }
     
     // ReSharper disable once IdentifierTypo
-    
     std::fstream fout_str(path.get_address(), std::fstream::trunc|std::fstream::out);
     // ReSharper disable once IdentifierTypo
     if(!fout_str.is_open())
@@ -65,16 +63,16 @@ void write_vec(std::vector<std::vector<std::string>>& vec, const address& path)
         std::cout << "the file isn't opened(str)!\n";
         return;
     }
-    for(int i = 0; i < vec.size(); ++i)
+    for (auto& i : vec.Table)
     {
         std::string str;
-        int a = vec.size();
-        for(int j = 0; j < vec[i].size(); ++j)
+        // int a = vec.Table.size();
+        for(uint64_t j = 0; j < i.size(); ++j)
         {
-            if(vec[i].size()-1 == j)
-                str += vec[i][j] + '\n';
+            if(i.size()-1 == j)
+                str += i[j] + '\n';
             else
-                str += vec[i][j] + ';';
+                str += i[j] + ';';
         }
         // str += '\n';
         fout_str.write(str.c_str(), static_cast<std::streamsize>(str.size()));
@@ -84,106 +82,100 @@ void write_vec(std::vector<std::vector<std::string>>& vec, const address& path)
     // return;
 }
 
-void read(const dualtype& a, const address& path)
+// void read(const dualtype& a, const address& path)
+// {
+//     std::setlocale(LC_ALL, "");
+//
+//     if(path.get_mode() != address::read)
+//     {
+//         std::cout << "\nthe file isn't opened to read(mod is not read)!\n";
+//         return;
+//     }
+//     
+//     std::string line;    
+//     if(a.is_Str_read)
+//     {
+//         std::fstream fin((path.get_address_str()), std::fstream::in);
+//         if(!fin.is_open())
+//         {
+//             std::cout << "\nthe file isn't opened to read(str)!\n";
+//             return;
+//         }
+//         for(int i = 0; getline(fin, line); ++i)
+//             a.Table[i] = line;
+//         fin.close();
+//         return;
+//     }
+//     
+//     std::fstream fin(path.get_address(), std::fstream::in);
+//     if(!fin.is_open())
+//     {
+//         std::cout << "\nthe file isn't opened(int)!\n";
+//         return;
+//     }
+//
+//     std::stringstream ss;
+//     for(int i = 0; getline(fin, line); ++i)
+//     {
+//         ss.clear();
+//         ss << line;
+//         ss >> a.Table[i];
+//     }
+//     
+//     fin.close();
+// }
+//
+// void write(const dualtype& a, const address& path, const int num)
+// {
+//     if(path.get_mode() != address::write)
+//     {
+//         std::cout << "\nthe file isn't opened for write(mode is not write)!\n";
+//         return;
+//     }
+//     
+//     // ReSharper disable once IdentifierTypo
+//     if(a.is_Str_read == true)
+//     {
+//         std::fstream fout_str(path.get_address_str(), std::fstream::trunc|std::fstream::out);
+//         // ReSharper disable once IdentifierTypo
+//         if(!fout_str.is_open())
+//         {
+//             std::cout << "the file isn't opened(str)!\n";
+//             return;
+//         }
+//         for(int i = 0; i < num; ++i)
+//         {
+//             std::string str = a.Table[i] + '\n';
+//             fout_str.write(str.c_str(), static_cast<std::streamsize>(str.size()));
+//         }
+//         fout_str.close();
+//         a.is_Str_read = false;
+//         return;
+//     }
+//     
+//     // ReSharper disable once IdentifierTypo
+//     std::fstream fout(path.get_address(), std::fstream::trunc|std::fstream::out);
+//     if(!fout.is_open())
+//     {
+//         std::cout << "the file isn't opened(int)!\n";
+//         fout.close();
+//         return;
+//     }
+//     
+//     for(int i = 0; i < num; ++i)
+//     {
+//         std::string str = std::to_string(a.Table[i]) + '\n';
+//         fout.write(str.c_str(), static_cast<std::streamsize>(str.size()));
+//     }
+//     
+//     fout.close();
+// }
+    // ReSharper restore CommentTypo
+
+void print(const dualtype& a, const uint64_t& col)
 {
-    std::setlocale(LC_ALL, "");
-
-    if(path.get_mode() != address::read)
-    {
-        std::cout << "\nthe file isn't opened to read(mod is not read)!\n";
-        return;
-    }
-    
-    std::string line;    
-    if(a.is_Str_read)
-    {
-        std::fstream fin((path.get_address_str()), std::fstream::in);
-        if(!fin.is_open())
-        {
-            std::cout << "\nthe file isn't opened to read(str)!\n";
-            return;
-        }
-        for(int i = 0; getline(fin, line); ++i)
-            a.Str[i] = line;
-        fin.close();
-        return;
-    }
-    
-    std::fstream fin(path.get_address(), std::fstream::in);
-    if(!fin.is_open())
-    {
-        std::cout << "\nthe file isn't opened(int)!\n";
-        return;
-    }
-
-    std::stringstream ss;
-    for(int i = 0; getline(fin, line); ++i)
-    {
-        ss.clear();
-        ss << line;
-        ss >> a.Int[i];
-    }
-    
-    fin.close();
-}
-
-void write(const dualtype& a, const address& path, const int num)
-{
-    if(path.get_mode() != address::write)
-    {
-        std::cout << "\nthe file isn't opened for write(mode is not write)!\n";
-        return;
-    }
-    
-    // ReSharper disable once IdentifierTypo
-    if(a.is_Str_read == true)
-    {
-        std::fstream fout_str(path.get_address_str(), std::fstream::trunc|std::fstream::out);
-        // ReSharper disable once IdentifierTypo
-        if(!fout_str.is_open())
-        {
-            std::cout << "the file isn't opened(str)!\n";
-            return;
-        }
-        for(int i = 0; i < num; ++i)
-        {
-            std::string str = a.Str[i] + '\n';
-            fout_str.write(str.c_str(), static_cast<std::streamsize>(str.size()));
-        }
-        fout_str.close();
-        a.is_Str_read = false;
-        return;
-    }
-    
-    // ReSharper disable once IdentifierTypo
-    std::fstream fout(path.get_address(), std::fstream::trunc|std::fstream::out);
-    if(!fout.is_open())
-    {
-        std::cout << "the file isn't opened(int)!\n";
-        fout.close();
-        return;
-    }
-    
-    for(int i = 0; i < num; ++i)
-    {
-        std::string str = std::to_string(a.Int[i]) + '\n';
-        fout.write(str.c_str(), static_cast<std::streamsize>(str.size()));
-    }
-    
-    fout.close();
-}
-
-void print(const dualtype& a, const int num)
-{
-    if(a.is_Str_read == false)
-        for(int i = 0; i < num; i++)
-            std::cout << a.Int[i] << " ";
-    else
-    {
-        for(int i = 0; i < num; i++)
-            std::cout << a.Str[i] << " ";
-        a.is_Str_read = false;
-    }
+    for (const auto& i : a.Table)
+        std::cout << i[col] << " ";
     
     std::cout << std::endl;
 }

@@ -2,7 +2,7 @@
 // ReSharper disable CppClangTidyModernizeRawStringLiteral
 // ReSharper disable StringLiteralTypo
 // ReSharper disable CppClangTidyConcurrencyMtUnsafe
-#define VERSION "v1.4.0"
+#define VERSION "v1.5.0"
 #include <iostream>
 #include "io.h"
 #include "time.h"  // NOLINT(modernize-deprecated-headers)
@@ -13,50 +13,26 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-setlocale(LC_ALL, "Russian");
-    // const string str = "";
-    vector<vector<std::string>> vec_str{};
+// setlocale(LC_ALL, "Russian");
+    address pa("C:\\Users\\User\\Documents\\Sort.csv"),
+    pa_out("C:\\Users\\User\\Documents\\Sort_out.csv", address::write);
+    
+    uint16_t n = 1; //число итераций time()  // NOLINT(clang-diagnostic-invalid-utf8)
     dualtype dt{};
-    // vector<int> ti{};
-    // vector<string> ts{};
-    const string ps = "C:\\Users\\User\\Documents\\Sort.csv";
-    const string ps_out = "C:\\Users\\User\\Documents\\Sort_out.csv";
-    address pa(ps);
-    address pa_out(ps_out, address::write);
-    pa.set_address_str(ps);
-    // dt.Int = ti;
-    // dt.Str = ts;
-    dt.is_Str_read = true;
-    read_vec(vec_str, pa);
-    test(shell_sort,dt,1,pa,false);
-    for(int i = 0; i < vec_str.size(); ++i)
-        vec_str[i][0] = dt.Str[i];
-    // read(dt, pa);
-    dt.is_Str_read = false;
-    write_vec(vec_str, pa_out);
-    
-    constexpr int num = 5000;
-    int n = 1; //число итераций time()  // NOLINT(clang-diagnostic-invalid-utf8)
-    
-    int a[num]{};
-    string a_s[num]{};
-    dualtype ms{};
-    // ms.Int = a;
-    // ms.Str = a_s;
-    
+
     address path("C:\\Users\\User\\Documents\\data.csv"),
     path_out("C:\\Users\\User\\Documents\\data_out.csv", address::write);
-    path.set_address_str("C:\\Users\\User\\Documents\\names.csv");
-    path_out.set_address_str("C:\\Users\\User\\Documents\\names_out.csv");
+
+    path = pa;
+    path_out = pa_out;
     
     path_mode mode1 = address::relative;
     string str_m;
     
     while (true)
     {
+        uint64_t col = 0;
         system("cls");
-        
-        int choice = 0;
         
         if(mode1 == static_cast<path_mode>(0))
             str_m = "relative";
@@ -68,11 +44,12 @@ setlocale(LC_ALL, "Russian");
                 "2.set path to in.csv file [" << path.get_address() << "] (in [" << path.get_path_mode() << "] mode)\n"
                 "3.set path to out.csv file [" << path_out.get_address() << "] (in [" << path_out.get_path_mode() << "] mode)\n"
                 "4.\n"/*set path for both*/
-                "5.number of iterations for testing [" << n << "]\n"
+                "5.number of iterations for testing [missing value]\n"
                 "6.full test of sorting\n"
-                "7.test of sorting [" << n << "] times with [" << num << "] of elements\n"
+                "7.test of sorting [" << n << "] times with [missing value] of elements\n"
                 "8.exit\n";
         
+        uint16_t choice = 0;
         cin >> choice;
         switch (choice)
         {
@@ -133,10 +110,9 @@ setlocale(LC_ALL, "Russian");
             {
                 system("cls");
                 cout << "full test of sorting\n\n";
-                full_test(ms, n, path, false);
-                ms.is_Str_read = true;
-                write(ms, path_out, num);
-                write(ms, path_out, num);
+                full_test(dt, n, path, col, false);
+                dt.is_Str_read = true;
+                write_vec(dt, path_out);
                 system("pause");
                 break;
             }
@@ -159,59 +135,59 @@ setlocale(LC_ALL, "Russian");
                 case 1:
                     {
                         system("cls");
-                        cout << "bubble_sort:\n" << test(bubble_sort, ms, n, path, false) << "\n\n";
-                        write(ms, path_out, num);
+                        cout << "bubble_sort:\n" << test(bubble_sort, dt, n, path, col, false) << "\n\n";
+                        write_vec(dt, path_out);
                         break;
                     }
                 case 2:
                     {
                         system("cls");
-                        cout << "selection_sort:\n" << test(selection_sort, ms, n, path, false) << "\n\n";
-                        write(ms, path_out, num);
+                        cout << "selection_sort:\n" << test(selection_sort, dt, n, path, col, false) << "\n\n";
+                        write_vec(dt, path_out);
                         break;
                     }
                 case 3:
                     {
                         system("cls");
-                        cout << "insertion_sort:\n" << test(insertion_sort, ms, n, path, false) << "\n\n";
-                        write(ms, path_out, num);
+                        cout << "insertion_sort:\n" << test(insertion_sort, dt, n, path, col, false) << "\n\n";
+                        write_vec(dt, path_out);
                         break;
                     }
                 case 4:
                     {
                         system("cls");
-                        cout << "q_sort:\n" << test(q_sort, ms, n, path, false) << "\n\n";
-                        write(ms, path_out, num);
+                        cout << "q_sort:\n" << test(q_sort, dt, n, path, col, false) << "\n\n";
+                        write_vec(dt, path_out);
                         break;
                     }
                 case 5:
                     {
                         system("cls");
                         cout << "it's not work yet!\n";
-                        cout << "merge_sort:\n" << test(merge_sort, ms, n, path, false) << "\n\n";
-                        write(ms, path_out, num);
+                        cout << "merge_sort:\n" << test(merge_sort, dt, n, path, col, false) << "\n\n";
+                        write_vec(dt, path_out);
                         break;
                     }
                 case 6:
                     {
                         system("cls");
-                        cout << "shell_sort:\n" << test(shell_sort, ms, n, path, false) << "\n\n";
-                        write(ms, path_out, num);
+                        cout << "shell_sort:\n" << test(shell_sort, dt, n, path, col, false) << "\n\n";
+                        write_vec(dt, path_out);
                         break;
                     }
                 case 7:
                     {
                         system("cls");
-                        cout << "heap_sort:\n" << test(heap_sort, ms, n, path, false) << "\n\n";
-                        write(ms, path_out, num);
+                        cout << "heap_sort:\n" << test(heap_sort, dt, n, path, col, false) << "\n\n";
+                        write_vec(dt, path_out);
                         break;
                     }
                 case 8:
                     {
                         system("cls");
-                        ms.is_Str_read = true;
-                        cout << "literal_sort:\n" << test(literal_sort, ms, n, path, false) << "\n\n";
-                        write(ms, path_out, num);
+                        dt.is_Str_read = true;
+                        cout << "literal_sort:\n" << test(literal_sort, dt, n, path, col, false) << "\n\n";
+                        write_vec(dt, path_out);
                         break;
                     }
                 default:

@@ -6,11 +6,10 @@ typedef std::byte path_mode;
 typedef std::byte wr_mode;
 
 // ReSharper disable once IdentifierTypo
+// ReSharper disable CppInconsistentNaming
 struct dualtype
 {
-    // ReSharper disable CppInconsistentNaming
-    mutable std::vector<int> Int;
-    mutable std::vector<std::string> Str;
+    std::vector<std::vector<std::string>> Table;
     mutable bool is_Str = false;
     mutable bool is_Str_read = false;
     // ReSharper restore CppInconsistentNaming
