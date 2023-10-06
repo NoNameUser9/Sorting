@@ -1,17 +1,17 @@
 ﻿// #pragma comment(lib, "<C:\Users\User\Documents\new\lib\ExcelFormat.lib>")
 #include "io.h"
-#include <fstream>
 #include <iostream>
-#include <locale>
+#include <fstream>
 #include <sstream>
 #include <vector>
+#include <algorithm>
+#include <chrono>
+#include <locale>
 
 // ReSharper disable once CppCompileTimeConstantCanBeReplacedWithBooleanConstant
 void read_vec(dualtype& vec, const address& path)
 {
     // ReSharper disable CommentTypo
-    // std::setlocale(LC_ALL, "");
-
     if(path.get_mode() != address::read)
     {
         std::cout << "\nthe file isn't opened to read(mod is not read)!\n";
@@ -66,7 +66,6 @@ void write_vec(const dualtype& vec, const address& path)
     for (auto& i : vec.Table)
     {
         std::string str;
-        // int a = vec.Table.size();
         for(uint64_t j = 0; j < i.size(); ++j)
         {
             if(i.size()-1 == j)
@@ -74,102 +73,29 @@ void write_vec(const dualtype& vec, const address& path)
             else
                 str += i[j] + ';';
         }
-        // str += '\n';
+        
         fout_str.write(str.c_str(), static_cast<std::streamsize>(str.size()));
     }
+    
     fout_str.close();
-    // vec.is_Str_read = false;
-    // return;
 }
 
-// void read(const dualtype& a, const address& path)
-// {
-//     std::setlocale(LC_ALL, "");
-//
-//     if(path.get_mode() != address::read)
-//     {
-//         std::cout << "\nthe file isn't opened to read(mod is not read)!\n";
-//         return;
-//     }
-//     
-//     std::string line;    
-//     if(a.is_Str_read)
-//     {
-//         std::fstream fin((path.get_address_str()), std::fstream::in);
-//         if(!fin.is_open())
-//         {
-//             std::cout << "\nthe file isn't opened to read(str)!\n";
-//             return;
-//         }
-//         for(int i = 0; getline(fin, line); ++i)
-//             a.Table[i] = line;
-//         fin.close();
-//         return;
-//     }
-//     
-//     std::fstream fin(path.get_address(), std::fstream::in);
-//     if(!fin.is_open())
-//     {
-//         std::cout << "\nthe file isn't opened(int)!\n";
-//         return;
-//     }
-//
-//     std::stringstream ss;
-//     for(int i = 0; getline(fin, line); ++i)
-//     {
-//         ss.clear();
-//         ss << line;
-//         ss >> a.Table[i];
-//     }
-//     
-//     fin.close();
-// }
-//
-// void write(const dualtype& a, const address& path, const int num)
-// {
-//     if(path.get_mode() != address::write)
-//     {
-//         std::cout << "\nthe file isn't opened for write(mode is not write)!\n";
-//         return;
-//     }
-//     
-//     // ReSharper disable once IdentifierTypo
-//     if(a.is_Str_read == true)
-//     {
-//         std::fstream fout_str(path.get_address_str(), std::fstream::trunc|std::fstream::out);
-//         // ReSharper disable once IdentifierTypo
-//         if(!fout_str.is_open())
-//         {
-//             std::cout << "the file isn't opened(str)!\n";
-//             return;
-//         }
-//         for(int i = 0; i < num; ++i)
-//         {
-//             std::string str = a.Table[i] + '\n';
-//             fout_str.write(str.c_str(), static_cast<std::streamsize>(str.size()));
-//         }
-//         fout_str.close();
-//         a.is_Str_read = false;
-//         return;
-//     }
-//     
-//     // ReSharper disable once IdentifierTypo
-//     std::fstream fout(path.get_address(), std::fstream::trunc|std::fstream::out);
-//     if(!fout.is_open())
-//     {
-//         std::cout << "the file isn't opened(int)!\n";
-//         fout.close();
-//         return;
-//     }
-//     
-//     for(int i = 0; i < num; ++i)
-//     {
-//         std::string str = std::to_string(a.Table[i]) + '\n';
-//         fout.write(str.c_str(), static_cast<std::streamsize>(str.size()));
-//     }
-//     
-//     fout.close();
-// }
+void write_vec_sort_time(dualtype& vec, const uint64_t& col, sort_type& type_name, const std::chrono::duration<double>& time)
+{
+    for (auto& i : vec.Table)
+    {
+        if(i[0] == type_name.get_name())
+        {
+            std::stringstream ss;
+            ss << time.count();
+            std::string s;
+            ss >> s;
+            std::ranges::replace(s, '.', ',');
+            i[col] = s;
+        }
+    }
+}
+
     // ReSharper restore CommentTypo
 
 void print(const dualtype& a, const uint64_t& col)

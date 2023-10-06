@@ -32,13 +32,21 @@ void full_test(dualtype& a, const uint16_t& n, const address& path, const uint64
 {
     if (!path.try_open())
         return;
-
-    cout << "bubble_sort:\n" << test(bubble_sort, a, n, path, col, to_low) << endl << endl;
-    cout << "selection_sort:\n" << test(selection_sort, a, n, path, col, to_low) << endl << endl;
-    cout << "insertion_sort:\n" << test(insertion_sort, a, n, path, col, to_low) << endl << endl;
-    cout << "q_sort:\n" << test(q_sort, a, n, path, col, to_low) << endl << endl;
-    cout << "merge_sort:\n" << test(merge_sort, a, n, path, col, to_low) << endl << endl;
-    cout << "shell_sort:\n" << test(shell_sort, a, n, path, col, to_low) << endl << endl;
-    cout << "heap_sort:\n" << test(heap_sort, a, n, path, col, to_low) << endl << endl;
-    cout << "literal_sort:\n" << test(literal_sort, a, n, path, col, to_low) << endl << endl;
+    chrono::duration<double, ratio<1, 1>>
+    time =test(bubble_sort, a, n, path, col, to_low);
+    cout << "bubble_sort:\n" << time << endl << endl;
+    time = test(selection_sort, a, n, path, col, to_low);
+    cout << "selection_sort:\n" << time << endl << endl;
+    time = test(insertion_sort, a, n, path, col, to_low);
+    cout << "insertion_sort:\n" << time << endl << endl;
+    time = test(q_sort, a, n, path, col, to_low);
+    cout << "q_sort:\n" << time << endl << endl;
+    time = test(merge_sort, a, n, path, col, to_low);
+    cout << "merge_sort:\n" << time << endl << endl;
+    time = test(shell_sort, a, n, path, col, to_low);
+    cout << "shell_sort:\n" << time << endl << endl;
+    time = test(heap_sort, a, n, path, col, to_low);
+    cout << "heap_sort:\n" << time << endl << endl;
+    time = test(literal_sort, a, n, path, col, to_low);
+    cout << "literal_sort:\n" << time << endl << endl;
 }

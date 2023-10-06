@@ -1,11 +1,12 @@
 ﻿#pragma once
 #include <string>
-// #include <vector>
-#include <Windows.h>
+#include <chrono>
 #include "struct.h"
+
 class address;
 void read_vec(dualtype& vec, const address& path);
 void write_vec(const dualtype& vec, const address& path);
+void write_vec_sort_time(dualtype& vec, const uint64_t& col, sort_type& type_name, const std::chrono::duration<double>& time);
 // using namespace std;  // NOLINT(clang-diagnostic-header-hygiene)
 
 /**

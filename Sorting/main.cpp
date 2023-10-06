@@ -19,15 +19,21 @@ int main(int argc, char* argv[])
     
     uint16_t n = 1; //число итераций time()  // NOLINT(clang-diagnostic-invalid-utf8)
     dualtype dt{};
-
+    dualtype dt_t{};
+    read_vec(dt_t, pa);
+    
+    bool tl = false;
+    
     address path("C:\\Users\\User\\Documents\\data.csv"),
     path_out("C:\\Users\\User\\Documents\\data_out.csv", address::write);
 
-    path = pa;
-    path_out = pa_out;
+    // path = pa;
+    // path_out = pa_out;
     
     path_mode mode1 = address::relative;
     string str_m;
+
+    dt.str_or_int = true;
     
     while (true)
     {
@@ -43,11 +49,12 @@ int main(int argc, char* argv[])
                 "1.set mode [" << str_m << "]\n"
                 "2.set path to in.csv file [" << path.get_address() << "] (in [" << path.get_path_mode() << "] mode)\n"
                 "3.set path to out.csv file [" << path_out.get_address() << "] (in [" << path_out.get_path_mode() << "] mode)\n"
-                "4.\n"/*set path for both*/
+                "4.set to_low state\n"/*set path for both*/
                 "5.number of iterations for testing [missing value]\n"
                 "6.full test of sorting\n"
                 "7.test of sorting [" << n << "] times with [missing value] of elements\n"
-                "8.exit\n";
+                "8.set col[" << col << "]\n"
+                "9.exit\n";
         
         uint16_t choice = 0;
         cin >> choice;
@@ -95,8 +102,10 @@ int main(int argc, char* argv[])
         case 4:
             {
                 system("cls");
-                cout << "don't work now!\n";
-                system("pause");
+                // cout << "don't work now!\n";
+                cout << "set tl state\n0.false\n1.true\n";
+                cin >> tl;
+                // system("pause");
                 break;
             }
         case 5:
@@ -135,59 +144,115 @@ int main(int argc, char* argv[])
                 case 1:
                     {
                         system("cls");
-                        cout << "bubble_sort:\n" << test(bubble_sort, dt, n, path, col, false) << "\n\n";
+                        chrono::duration<double, ratio<1, 1>> time{};
+                        time = test(bubble_sort, dt, n, path, col, tl);
+                        cout << "bubble_sort:\n" << time << "\n\n";
                         write_vec(dt, path_out);
+                        sort_type st;
+                        st.set_name(sort_type::bubble);
+                        write_vec_sort_time(dt_t, 1, st, time);
+                        address pt(pa.get_address(), address::write);
+                        write_vec(dt_t, pt);
                         break;
                     }
                 case 2:
                     {
                         system("cls");
-                        cout << "selection_sort:\n" << test(selection_sort, dt, n, path, col, false) << "\n\n";
+                        chrono::duration<double, ratio<1, 1>> time{};
+                        time = test(selection_sort, dt, n, path, col, tl);
+                        cout << "selection_sort:\n" << time << "\n\n";
                         write_vec(dt, path_out);
+                        sort_type st;
+                        st.set_name(sort_type::selection);
+                        write_vec_sort_time(dt_t, 1, st, time);
+                        address pt(pa.get_address(), address::write);
+                        write_vec(dt_t, pt);
                         break;
                     }
                 case 3:
                     {
                         system("cls");
-                        cout << "insertion_sort:\n" << test(insertion_sort, dt, n, path, col, false) << "\n\n";
+                        chrono::duration<double, ratio<1, 1>> time{};
+                        time = test(insertion_sort, dt, n, path, col, tl);
+                        cout << "insertion_sort:\n" << time << "\n\n";
                         write_vec(dt, path_out);
+                        sort_type st;
+                        st.set_name(sort_type::insertion);
+                        write_vec_sort_time(dt_t, 1, st, time);
+                        address pt(pa.get_address(), address::write);
+                        write_vec(dt_t, pt);
                         break;
                     }
                 case 4:
                     {
                         system("cls");
-                        cout << "q_sort:\n" << test(q_sort, dt, n, path, col, false) << "\n\n";
+                        chrono::duration<double, ratio<1, 1>> time{};
+                        time = test(q_sort, dt, n, path, col, tl);
+                        cout << "q_sort:\n" << time << "\n\n";
                         write_vec(dt, path_out);
+                        sort_type st;
+                        st.set_name(sort_type::q_sort);
+                        write_vec_sort_time(dt_t, 1, st, time);
+                        address pt(pa.get_address(), address::write);
+                        write_vec(dt_t, pt);
                         break;
                     }
                 case 5:
                     {
                         system("cls");
                         cout << "it's not work yet!\n";
-                        cout << "merge_sort:\n" << test(merge_sort, dt, n, path, col, false) << "\n\n";
+                        chrono::duration<double, ratio<1, 1>> time{};
+                        time = test(merge_sort, dt, n, path, col, tl);
+                        cout << "merge_sort:\n" << time << "\n\n";
                         write_vec(dt, path_out);
+                        sort_type st;
+                        st.set_name(sort_type::merge);
+                        write_vec_sort_time(dt_t, 1, st, time);
+                        address pt(pa.get_address(), address::write);
+                        write_vec(dt_t, pt);
                         break;
                     }
                 case 6:
                     {
                         system("cls");
-                        cout << "shell_sort:\n" << test(shell_sort, dt, n, path, col, false) << "\n\n";
+                        chrono::duration<double, ratio<1, 1>> time{};
+                        time = test(shell_sort, dt, n, path, col, tl);
+                        cout << "shell_sort:\n" << time << "\n\n";
                         write_vec(dt, path_out);
+                        sort_type st;
+                        st.set_name(sort_type::shell);
+                        write_vec_sort_time(dt_t, 1, st, time);
+                        address pt(pa.get_address(), address::write);
+                        write_vec(dt_t, pt);
                         break;
                     }
                 case 7:
                     {
                         system("cls");
-                        cout << "heap_sort:\n" << test(heap_sort, dt, n, path, col, false) << "\n\n";
+                        chrono::duration<double, ratio<1, 1>> time{};
+                        time = test(heap_sort, dt, n, path, col, tl);
+                        cout << "heap_sort:\n" << time << "\n\n";
                         write_vec(dt, path_out);
+                        sort_type st;
+                        st.set_name(sort_type::heap);
+                        write_vec_sort_time(dt_t, 1, st, time);
+                        address pt(pa.get_address(), address::write);
+                        write_vec(dt_t, pt);
                         break;
                     }
                 case 8:
                     {
                         system("cls");
-                        dt.is_Str_read = true;
-                        cout << "literal_sort:\n" << test(literal_sort, dt, n, path, col, false) << "\n\n";
+                        // dt.is_Str_read = true;
+                        chrono::duration<double, ratio<1, 1>> time{};
+                        time = test(literal_sort, dt, n, path, col, tl);
+                        cout << "literal_sort:\n" << time << "\n\n";
                         write_vec(dt, path_out);
+                        sort_type st;
+                        st.set_name(sort_type::literal);
+                        write_vec_sort_time(dt_t, 1, st, time);
+                        address pt(pa.get_address(), address::write);
+                        write_vec(dt_t, pt);
                         break;
                     }
                 default:
@@ -201,6 +266,13 @@ int main(int argc, char* argv[])
                 break;
             }
         case 8:
+            {
+                system("cls");
+                cout << "set col num\n";
+                cin >> col;
+                break;
+            }
+        case 9:
             {
                 goto end;  // NOLINT(cppcoreguidelines-avoid-goto, hicpp-avoid-goto)
             }
