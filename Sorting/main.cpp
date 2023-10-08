@@ -13,31 +13,25 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-// setlocale(LC_ALL, "Russian");
     address pa("C:\\Users\\User\\Documents\\Sort.csv"),
-    pa_out("C:\\Users\\User\\Documents\\Sort_out.csv", address::write);
+    pa_out("C:\\Users\\User\\Documents\\Sort_out.csv", address::write),
+    path("C:\\Users\\User\\Documents\\Moscow.csv"),
+    path_out("C:\\Users\\User\\Documents\\Moscow_out.csv", address::write);
     
     uint16_t n = 1; //число итераций time()  // NOLINT(clang-diagnostic-invalid-utf8)
     dualtype dt{};
     dualtype dt_t{};
     read_vec(dt_t, pa);
-    
-    bool tl = false;
-    
-    address path("C:\\Users\\User\\Documents\\data.csv"),
-    path_out("C:\\Users\\User\\Documents\\data_out.csv", address::write);
-
-    // path = pa;
-    // path_out = pa_out;
+    bool tl = true;
     
     path_mode mode1 = address::relative;
     string str_m;
+    dt.str_or_int = false;
 
-    dt.str_or_int = true;
     
+    uint16_t col = 1;
     while (true)
     {
-        uint64_t col = 0;
         system("cls");
         
         if(mode1 == static_cast<path_mode>(0))
@@ -50,9 +44,9 @@ int main(int argc, char* argv[])
                 "2.set path to in.csv file [" << path.get_address() << "] (in [" << path.get_path_mode() << "] mode)\n"
                 "3.set path to out.csv file [" << path_out.get_address() << "] (in [" << path_out.get_path_mode() << "] mode)\n"
                 "4.set to_low state\n"/*set path for both*/
-                "5.number of iterations for testing [missing value]\n"
+                "5.number of iterations for testing [" << dt_t.Table.size()-1 << "]\n"
                 "6.full test of sorting\n"
-                "7.test of sorting [" << n << "] times with [missing value] of elements\n"
+                "7.test of sorting [" << n << "] times with [" << dt_t.Table.size()-1 << "] of elements\n"
                 "8.set col[" << col << "]\n"
                 "9.exit\n";
         
@@ -102,10 +96,8 @@ int main(int argc, char* argv[])
         case 4:
             {
                 system("cls");
-                // cout << "don't work now!\n";
                 cout << "set tl state\n0.false\n1.true\n";
                 cin >> tl;
-                // system("pause");
                 break;
             }
         case 5:
@@ -200,7 +192,7 @@ int main(int argc, char* argv[])
                 case 5:
                     {
                         system("cls");
-                        cout << "it's not work yet!\n";
+                        // cout << "it's not work yet!\n";
                         chrono::duration<double, ratio<1, 1>> time{};
                         time = test(merge_sort, dt, n, path, col, tl);
                         cout << "merge_sort:\n" << time << "\n\n";

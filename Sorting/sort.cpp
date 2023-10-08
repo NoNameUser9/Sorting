@@ -5,13 +5,13 @@
 void tolow(dualtype& a, const uint64_t& num)
 {
     auto* temp = new std::vector<std::string>[num];
-    for(uint64_t i = 1; i < num; ++i)
+    for(uint64_t i = 0; i < num; ++i)
         temp[num - i-1] = a.Table[i];
     for(uint64_t i = 1; i < num; ++i)
-        a.Table[i] = temp[i];
+        a.Table[i] = temp[i-1];
 }
 
-void bubble_sort(dualtype& a, const uint64_t& col, const bool& to_low)
+void bubble_sort(dualtype& a, const uint16_t& col, const bool& to_low)
 {
     bool swapped = false;
     auto num_t = a.Table.size();
@@ -22,7 +22,7 @@ void bubble_sort(dualtype& a, const uint64_t& col, const bool& to_low)
         {
             if(a.str_or_int == true)
             {
-                if(stoi(a.Table[i][col]) > stoi(a.Table[i+1][col]))
+                if(a.Table[i][col] > a.Table[i+1][col])
                 {
                     swap(a.Table[i], a.Table[i+1]);
                     swapped = true;
@@ -30,7 +30,7 @@ void bubble_sort(dualtype& a, const uint64_t& col, const bool& to_low)
             }
             else
             {
-                if(a.Table[i][col] > a.Table[i+1][col])
+                if(stod(a.Table[i][col]) > stod(a.Table[i+1][col]))
                 {
                     swap(a.Table[i], a.Table[i+1]);
                     swapped = true;
@@ -47,20 +47,20 @@ void bubble_sort(dualtype& a, const uint64_t& col, const bool& to_low)
         tolow(a, a.Table.size());
 }
 
-void selection_sort(dualtype& a, const uint64_t& col, const bool& to_low)
+void selection_sort(dualtype& a, const uint16_t& col, const bool& to_low)
 {
-    uint64_t index = 0;
-    for(uint64_t i = 1; i < a.Table.size() - 1; ++i)
+    uint64_t index = 1;
+    for(uint64_t i = 1; i < a.Table.size()-1; ++i)
     {
-        for(uint64_t i1 = i; i1 < a.Table.size(); ++i1)
+        for(uint64_t i1 = i+1; i1 < a.Table.size(); ++i1)
         {
             if(a.str_or_int == true)
             {
-                if(stoi(a.Table[i1][col]) < stoi(a.Table[index][col]))
+                if(a.Table[i1][col] < a.Table[index][col])
                     index = i1;
             }
             else
-                if(a.Table[i1][col] < a.Table[index][col])
+                if(stod(a.Table[i1][col]) < stod(a.Table[index][col]))
                     index = i1;
         }
         swap(a.Table[i], a.Table[index]);
@@ -70,18 +70,18 @@ void selection_sort(dualtype& a, const uint64_t& col, const bool& to_low)
         tolow(a, a.Table.size());
 }
 
-void insertion_sort(dualtype& a, const uint64_t& col, const bool& to_low)
+void insertion_sort(dualtype& a, const uint16_t& col, const bool& to_low)
 {
     for(uint64_t i = 1; i < a.Table.size(); ++i)
     {
-        for(uint64_t i1 = i; i1 > 0; --i1)
+        for(uint64_t i1 = i; i1 > 1; --i1)
         {
             if(a.str_or_int == true)
             {
-                if(stoi(a.Table[i1][col]) < stoi(a.Table[i1-1][col]))
+                if(a.Table[i1][col] < a.Table[i1-1][col])
                     swap(a.Table[i1], a.Table[i1-1]);
             }
-            else if(a.Table[i1][col] < a.Table[i1-1][col])
+            else if(stod(a.Table[i1][col]) < stod(a.Table[i1-1][col]))
                 swap(a.Table[i1], a.Table[i1-1]);
         }
     }
@@ -98,20 +98,19 @@ void insertion_sort(dualtype& a, const uint64_t& col, const bool& to_low)
  * \param col is column of a.Table
  * \return pivot point sorted piece of a[] array
  */
-uint64_t partition(dualtype& a, const uint64_t& start, uint64_t pivot, const uint64_t& col)
+uint64_t partition(dualtype& a, const uint64_t& start, uint64_t pivot, const uint16_t& col)
 {
     uint64_t i = start;
     while(i < pivot)
     {
         if(a.str_or_int == true)
         {
-            if(stoi(a.Table[i][col]) > stoi(a.Table[pivot][col]) && i == pivot-1)
+            if(a.Table[i][col] > a.Table[pivot][col] && i == pivot-1)
             {
                 swap(a.Table[i], a.Table[pivot]);
                 pivot--;
             }
-		
-            else if(stoi(a.Table[i][col]) > stoi(a.Table[pivot][col]))
+            else if(a.Table[i][col] > a.Table[pivot][col])
             {
                 swap(a.Table[pivot - 1], a.Table[pivot]);
                 swap(a.Table[i], a.Table[pivot]);
@@ -122,13 +121,13 @@ uint64_t partition(dualtype& a, const uint64_t& start, uint64_t pivot, const uin
         }
         else
         {
-            if(a.Table[i][col] > a.Table[pivot][col] && i == pivot-1)
+            if(stod(a.Table[i][col]) > stod(a.Table[pivot][col]) && i == pivot-1)
             {
                 swap(a.Table[i], a.Table[pivot]);
                 pivot--;
             }
 		    
-            else if(a.Table[i][col] > a.Table[pivot][col])
+            else if(stod(a.Table[i][col]) > stod(a.Table[pivot][col]))
             {
                 swap(a.Table[pivot - 1], a.Table[pivot]);
                 swap(a.Table[i], a.Table[pivot]);
@@ -141,7 +140,7 @@ uint64_t partition(dualtype& a, const uint64_t& start, uint64_t pivot, const uin
     return pivot;
 }
 
-void q_sort_r(dualtype& a, const uint64_t& start, const uint64_t end, const uint64_t& col)
+void q_sort_r(dualtype& a, const uint64_t& start, const uint64_t end, const uint16_t& col)
 {
     if(start < end)
     {
@@ -152,7 +151,7 @@ void q_sort_r(dualtype& a, const uint64_t& start, const uint64_t end, const uint
     }
 }
 
-void q_sort(dualtype& a, const uint64_t& col, const bool& to_low)
+void q_sort(dualtype& a, const uint16_t& col, const bool& to_low)
 {
     q_sort_r(a, 1, a.Table.size()-1, col);
     
@@ -160,45 +159,52 @@ void q_sort(dualtype& a, const uint64_t& col, const bool& to_low)
         tolow(a, a.Table.size());
 }
 
-// ReSharper disable CommentTypo
-// void merge_sort_r(dualtype& a, const int num)
-// {
-//     if (num < 2)return;
-//     merge_sort_r(a, num / 2);
-//     merge_sort_r(&a[num / 2], num - (num / 2));
-//     const auto buf = new int[num];
-//     // ReSharper disable once IdentifierTypo
-//     int idbuf = 0, idl = 0, idr = num / 2 ;
-//     while ((idl < num / 2) && (idr < num))
-//         if (a[idl] < a[idr]) 
-//             buf[idbuf++] = a[idl++];
-//         else
-//             buf[idbuf++] = a[idr++];
-//     while (idl < num / 2) buf[idbuf++] = a[idl++];
-//     while (idr < num) buf[idbuf++] = a[idr++];
-//     for (idl = 0; idl < num; idl++)a[idl] = buf[idl];
-//     delete[]buf;
-// }
-// ReSharper restore CommentTypo
+void merge_sort_r(dualtype& a, const uint16_t fst, const uint16_t lst, const uint16_t& col) {
+    const uint16_t mid = (fst + lst) / 2;
+    uint16_t start = fst;
+    uint16_t fin = mid + 1;
+    auto* buf = new std::vector<std::string>[lst + 1];
 
+    for (uint16_t i = fst; i <= lst; i++) {
+        if (start <= mid && (fin > lst || stod(a.Table[start][col]) < stod(a.Table[fin][col]))) {
+            buf[i] = a.Table[start];
+            start++;
+        }
+        else {
+            buf[i] = a.Table[fin];
+            fin++;
+        }
+    }
+    for (int i = fst; i <= lst; i++) a.Table[i] = buf[i];
 
-void merge_sort(dualtype& a, const uint64_t& col, const bool& to_low)
+    delete[] buf;
+
+}
+
+void merge_r(dualtype& arr, const uint16_t first, const uint16_t last, const uint16_t& col) {
+    if (first < last) {
+        merge_r(arr, first, (first + last) / 2, col);
+        merge_r(arr, (first + last) / 2 + 1, last, col);
+        merge_sort_r(arr, first, last, col);
+    }
+}
+
+void merge_sort(dualtype& a, const uint16_t& col, const bool& to_low)
 {
-    // merge_sort_r(a, col);
+    merge_r(a, col, static_cast<uint16_t>(a.Table.size())-1, col);
     if(to_low == true)
         tolow(a, a.Table.size());
 }
 
-void shell_sort(dualtype& a, const uint64_t& col, const bool& to_low)
+void shell_sort(dualtype& a, const uint16_t& col, const bool& to_low)
 {
+    auto range = static_cast<double>(a.Table.size());
+    constexpr double factor = 1.2473309;
     if(a.is_Str_read == true)
     {
-        auto range = static_cast<double>(a.Table.size());
         while(true)
         {
-            constexpr double factor = 1.2473309;
-            
-            for(uint64_t i = 1, j = static_cast<uint64_t>(range)-1; j-i >= 1 && j < a.Table.size() && j > i; ++i, ++j)
+            for(uint64_t i = 1, j = static_cast<uint64_t>(range)-1; j-i > 0 && j <= a.Table.size(); ++i, ++j)
             {
                 if(a.Table[i][col] > a.Table[j][col])
                     swap(a.Table[i], a.Table[j]);
@@ -212,41 +218,18 @@ void shell_sort(dualtype& a, const uint64_t& col, const bool& to_low)
     }
     else
     {
-        if(a.str_or_int == true)
+        while(true)
         {
-            auto range = static_cast<double>(a.Table.size());
-            while(true)
+            for(uint64_t i = 1, j = static_cast<uint64_t>(range)-1; j-i >= 1 && j < a.Table.size() && j > i; ++i, ++j)
             {
-                constexpr double factor = 1.2473309;
-                for(uint64_t i = 1, j = static_cast<uint64_t>(range)-1; j-i >= 1 && j < a.Table.size() && j > i; ++i, ++j)
-                {
-                    if(stod(a.Table[i][col]) > stod(a.Table[j][col]))
-                        swap(a.Table[i], a.Table[j]);
-                }
-
-                if(range <= 2)
-                    break;
-                
-                range /= factor;
+                if(stod(a.Table[i][col]) > stod(a.Table[j][col]))
+                    swap(a.Table[i], a.Table[j]);
             }
-        }
-        else
-        {
-            auto range = static_cast<double>(a.Table.size());
-            while(true)
-            {
-                constexpr double factor = 1.2473309;
-                for(uint64_t i = 1, j = static_cast<uint64_t>(range)-1; j-i >= 1 && j < a.Table.size() && j > i; ++i, ++j)
-                {
-                    if(a.Table[i][col] > a.Table[j][col])
-                        swap(a.Table[i], a.Table[j]);
-                }
 
-                if(range <= 2)
-                    break;
-            
-                range /= factor;
-            }
+            if(range <= 1)
+                break;
+        
+            range /= factor;
         }
     }
     
@@ -258,46 +241,47 @@ void shell_sort(dualtype& a, const uint64_t& col, const bool& to_low)
 /**
  * \brief make a heap(binary tree) from a[n] array
  * \param a a[n] array
- * \param n number of array elements
- * \param i largest element of array
+ * \param first first
+ * \param last last
+ * \param col column of sort
  */
-void heapify(dualtype& a, const uint64_t n, const uint64_t i)
+void heapify(dualtype& a, uint64_t first, const uint64_t last, const uint16_t& col)
 {
-    uint64_t largest = i;
-    
-    if(const uint64_t l = 2*i + 1; l < n && a.Table[l] > a.Table[largest])
-        largest = l;
-    
-    if(const uint64_t r = 2*i + 2; r < n && a.Table[r] > a.Table[largest])
-        largest = r;
+    uint64_t largest;
+    bool f_done = false;
 
-    if(largest != i)
-    {
-        swap(a.Table[largest], a.Table[i]);
-        heapify(a, n, largest);
+    while (first * 2 <= last && !f_done) {
+        if (first * 2 == last || stod(a.Table[first * 2][col]) > stod(a.Table[first * 2 + 1][col]))
+            largest = first * 2;
+        else
+            largest = first * 2 + 1;
+
+        if (stod(a.Table[first][col]) < stod(a.Table[largest][col])) {
+            swap(a.Table[first], a.Table[largest]);
+            first = largest;
+        }
+        else f_done = true;
     }
 }
 
-void heap_sort(dualtype& a, const uint64_t& col, const bool& to_low)
+void heap_sort(dualtype& a, const uint16_t& col, const bool& to_low)
 {
-    for(uint64_t i = a.Table.size()/2 - 1; i > 0; --i)
-        heapify(a, a.Table.size(), i);
-
-    for(uint64_t i = a.Table.size()-1; i> 0; --i)
-    {
-        swap(a.Table[0], a.Table[i]);
-        heapify(a, i, 0);
+    for (uint64_t i = a.Table.size() / 2; i >= 1; --i)
+        heapify(a, i, a.Table.size() - 1, col);
+    
+    for (uint64_t i = a.Table.size() - 1; i >= 2; --i) {
+        swap(a.Table[1], a.Table[i]);
+        heapify(a, 1, i - 1, col);
     }
     
     if(to_low == true)
         tolow(a, a.Table.size());
 }
 
-void literal_sort(dualtype& a, const uint64_t& col, const bool& to_low)
+void literal_sort(dualtype& a, const uint16_t& col, const bool& to_low)
 {
     a.is_Str_read = true;
     // ReSharper disable once CommentTypo
     shell_sort(a, col, to_low);  // NOLINT(clang-diagnostic-cast-qual, clang-diagnostic-cast-align, performance-no-int-to-ptr, clang-diagnostic-int-to-pointer-cast)
     a.is_Str_read = false;
-    // a.is_Str = true;
 }

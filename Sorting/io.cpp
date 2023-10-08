@@ -81,7 +81,7 @@ void write_vec(const dualtype& vec, const address& path)
 }
 
 void write_vec_sort_time(dualtype& vec, const uint64_t& col, sort_type& type_name, const std::chrono::duration<double>& time)
-{
+{ 
     for (auto& i : vec.Table)
     {
         if(i[0] == type_name.get_name())
