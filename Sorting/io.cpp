@@ -4,7 +4,6 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <algorithm>
 #include <chrono>
 #include <locale>
 
@@ -88,10 +87,10 @@ void write_vec_sort_time(dualtype& vec, const uint64_t& col, sort_type& type_nam
         {
             std::stringstream ss;
             ss << time.count();
-            std::string s;
-            ss >> s;
-            std::ranges::replace(s, '.', ',');
-            i[col] = s;
+            // std::string s;
+            ss >> i[col];
+            // i[col] = s;
+            return;
         }
     }
 }

@@ -204,7 +204,7 @@ void shell_sort(dualtype& a, const uint16_t& col, const bool& to_low)
     {
         while(true)
         {
-            for(uint64_t i = 1, j = static_cast<uint64_t>(range)-1; j-i > 0 && j <= a.Table.size(); ++i, ++j)
+            for(uint64_t i = 1, j = static_cast<uint64_t>(range)-1; j-i >= 1 && j < a.Table.size() && j > i; ++i, ++j)
             {
                 if(a.Table[i][col] > a.Table[j][col])
                     swap(a.Table[i], a.Table[j]);

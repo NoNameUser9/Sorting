@@ -2,7 +2,7 @@
 // ReSharper disable CppClangTidyModernizeRawStringLiteral
 // ReSharper disable StringLiteralTypo
 // ReSharper disable CppClangTidyConcurrencyMtUnsafe
-#define VERSION "v1.5.0"
+#define VERSION "v1.5.1"
 #include <iostream>
 #include "io.h"
 #include "time.h"  // NOLINT(modernize-deprecated-headers)
@@ -14,20 +14,19 @@ using namespace std;
 int main(int argc, char* argv[])
 {
     address pa("C:\\Users\\User\\Documents\\Sort.csv"),
-    pa_out("C:\\Users\\User\\Documents\\Sort_out.csv", address::write),
+    // pa_out("C:\\Users\\User\\Documents\\Sort_out.csv", address::write),
     path("C:\\Users\\User\\Documents\\Moscow.csv"),
     path_out("C:\\Users\\User\\Documents\\Moscow_out.csv", address::write);
     
     uint16_t n = 1; //число итераций time()  // NOLINT(clang-diagnostic-invalid-utf8)
     dualtype dt{};
     dualtype dt_t{};
+    read_vec(dt, path);
     read_vec(dt_t, pa);
     bool tl = true;
     
     path_mode mode1 = address::relative;
     string str_m;
-    dt.str_or_int = false;
-
     
     uint16_t col = 1;
     while (true)
@@ -43,10 +42,10 @@ int main(int argc, char* argv[])
                 "1.set mode [" << str_m << "]\n"
                 "2.set path to in.csv file [" << path.get_address() << "] (in [" << path.get_path_mode() << "] mode)\n"
                 "3.set path to out.csv file [" << path_out.get_address() << "] (in [" << path_out.get_path_mode() << "] mode)\n"
-                "4.set to_low state\n"/*set path for both*/
-                "5.number of iterations for testing [" << dt_t.Table.size()-1 << "]\n"
+                "4.set to_low state [" << tl << "]\n"
+                "5.number of iterations for testing [" << n << "]\n"
                 "6.full test of sorting\n"
-                "7.test of sorting [" << n << "] times with [" << dt_t.Table.size()-1 << "] of elements\n"
+                "7.test of sorting [" << n << "] times with [" << dt.Table.size()-1 << "] of elements\n"
                 "8.set col[" << col << "]\n"
                 "9.exit\n";
         
