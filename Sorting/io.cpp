@@ -8,7 +8,7 @@
 #include <locale>
 
 // ReSharper disable once CppCompileTimeConstantCanBeReplacedWithBooleanConstant
-void read_vec(dualtype& vec, const address& path)
+void read_vec(unitype& a, const address& path)
 {
     // ReSharper disable CommentTypo
     if(path.get_mode() != address::read)
@@ -25,28 +25,32 @@ void read_vec(dualtype& vec, const address& path)
         return;
     }
         
+    auto size = 0;
     for(int i = 0; getline(fin, line); ++i)
     {
-        vec.Table.resize(i+1);
+        a.Table.resize(i+1);
         int j = 0, jj = 0;
         for(auto itl = line.begin(); itl != line.end(); ++j, ++jj, ++itl)
         {
             std::string ts;
-            for(auto ii = 0; !(itl == line.end() || line.at(jj) == ';'); ++ii, ++jj, ++itl)
+            for(uint64_t ii = 0; !(itl == line.end() || line.at(jj) == ';'); ++ii, ++jj, ++itl)
                 ts += line[jj];
-                    
-            vec.Table[i].resize(j+1);
-            vec.Table[i][j] = ts;
+            if(size < j)
+                size = j+1;
+            a.Table[i].resize(j+1);
+            a.Table[i][j] = ts;
             if(itl == line.end())
             {
                 --jj; --itl;
             }
         }
     }
+    for (auto& i : a.Table)
+        i.resize(size);
     fin.close();
 }
 
-void write_vec(const dualtype& vec, const address& path)
+void write_vec(const unitype& vec, const address& path)
 {
     if(path.get_mode() != address::write)
     {
@@ -79,7 +83,7 @@ void write_vec(const dualtype& vec, const address& path)
     fout_str.close();
 }
 
-void write_vec_sort_time(dualtype& vec, const uint64_t& col, sort_type& type_name, const std::chrono::duration<double>& time)
+void write_vec_sort_time(unitype& vec, const uint64_t& col, sort_type& type_name, const std::chrono::duration<double>& time)
 { 
     for (auto& i : vec.Table)
     {
@@ -95,9 +99,8 @@ void write_vec_sort_time(dualtype& vec, const uint64_t& col, sort_type& type_nam
     }
 }
 
-    // ReSharper restore CommentTypo
-
-void print(const dualtype& a, const uint64_t& col)
+// ReSharper restore CommentTypo
+void print(const unitype& a, const uint64_t& col)
 {
     for (const auto& i : a.Table)
         std::cout << i[col] << " ";

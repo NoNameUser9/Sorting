@@ -4,16 +4,16 @@
 #include "struct.h"
 
 class address;
-void read_vec(dualtype& vec, const address& path);
-void write_vec(const dualtype& vec, const address& path);
-void write_vec_sort_time(dualtype& vec, const uint64_t& col, sort_type& type_name, const std::chrono::duration<double>& time);
+void read_vec(unitype& a, const address& path);
+void write_vec(const unitype& vec, const address& path);
+void write_vec_sort_time(unitype& vec, const uint64_t& col, sort_type& type_name, const std::chrono::duration<double>& time);
 // using namespace std;  // NOLINT(clang-diagnostic-header-hygiene)
 
 /**
  * \param a a[] array
  * \param col is column of sort
  */
-void print(const dualtype* a, uint64_t& col);
+void print(const unitype* a, uint64_t& col);
 
 /**
  * \brief type of data which contains address of file with data

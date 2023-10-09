@@ -4,7 +4,7 @@
 
 using namespace std;
 
-chrono::duration<double, ratio<1, 1>> time(void (*f)(dualtype&, const uint16_t& col, const bool&), dualtype& a, const uint16_t& col, const bool& to_low)
+chrono::duration<double, ratio<1, 1>> time(void (*f)(unitype&, const uint16_t& col, const bool&), unitype& a, const uint16_t& col, const bool& to_low)
 {
     const auto start = chrono::system_clock::now();
     f(a, col, to_low); // NOLINT(bugprone-branch-clone)
@@ -13,7 +13,7 @@ chrono::duration<double, ratio<1, 1>> time(void (*f)(dualtype&, const uint16_t& 
     return chrono::duration<double, ratio<1, 1>>(end - start); // NOLINT(modernize-return-braced-init-list)
 }
 
-chrono::duration<double, ratio<1, 1>> test(void (*f)(dualtype&, const uint16_t& col, const bool&), dualtype& a, const uint16_t& n, const address& path ,const uint16_t& col, const bool& to_low)
+chrono::duration<double, ratio<1, 1>> test(void (*f)(unitype&, const uint16_t& col, const bool&), unitype& a, const uint16_t& n, const address& path ,const uint16_t& col, const bool& to_low)
 {
     if (!path.try_open())
         return chrono::duration<double, ratio<1, 1>>(0);
@@ -28,7 +28,7 @@ chrono::duration<double, ratio<1, 1>> test(void (*f)(dualtype&, const uint16_t& 
     return t /= n;
 }
 
-void full_test(dualtype& a, const uint16_t& n, const address& path, const uint16_t& col, const bool& to_low)
+void full_test(unitype& a, const uint16_t& n, const address& path, const uint16_t& col, const bool& to_low)
 {
     if (!path.try_open())
         return;

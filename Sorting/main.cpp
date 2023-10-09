@@ -2,7 +2,7 @@
 // ReSharper disable CppClangTidyModernizeRawStringLiteral
 // ReSharper disable StringLiteralTypo
 // ReSharper disable CppClangTidyConcurrencyMtUnsafe
-#define VERSION "v1.5.1"
+#define VERSION "v1.6.0"
 #include <iostream>
 #include "io.h"
 #include "time.h"  // NOLINT(modernize-deprecated-headers)
@@ -19,11 +19,17 @@ int main(int argc, char* argv[])
     path_out("C:\\Users\\User\\Documents\\Moscow_out.csv", address::write);
     
     uint16_t n = 1; //число итераций time()  // NOLINT(clang-diagnostic-invalid-utf8)
-    dualtype dt{};
-    dualtype dt_t{};
+    unitype dt{};
+    unitype dt_t{};
     read_vec(dt, path);
     read_vec(dt_t, pa);
     bool tl = true;
+
+
+    dt.set_type(0, unitype::type_date);
+    dt.set_type_ft(1, 7, unitype::type_double);
+    
+
     
     path_mode mode1 = address::relative;
     string str_m;
