@@ -1,5 +1,4 @@
 ﻿#include "sort.h"
-#include <iostream>
 
 // ReSharper disable once IdentifierTypo
 void tolow(unitype& a, const uint64_t& num)

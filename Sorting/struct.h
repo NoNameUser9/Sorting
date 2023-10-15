@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include <sstream>
-#include <string>
 #include <vector>
 
 typedef std::byte path_mode;

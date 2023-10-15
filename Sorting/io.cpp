@@ -3,9 +3,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <vector>
-#include <chrono>
-#include <locale>
 
 // ReSharper disable once CppCompileTimeConstantCanBeReplacedWithBooleanConstant
 void read_vec(unitype& a, const address& path)
